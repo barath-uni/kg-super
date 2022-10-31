@@ -19,3 +19,20 @@ Then use `tar` to extract the files, e.g.
 ```sh
 tar -xzvf WN18RR.tar.gz
 ```
+
+### Idenitifying Relationship Similarity
+
+Overlap Coefficient - 
+
+Jaccard Coeffecient - 
+
+CompNet - https://web.rniapps.net/compnet/ to visualize the graph
+
+Similarity with Textual Embeddings
+
+Cosine-Similarity - 
+
+L2 Distance - 
+
+
+
