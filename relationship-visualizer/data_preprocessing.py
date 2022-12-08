@@ -7,6 +7,7 @@ from sklearn.cluster import KMeans
 from sklearn.feature_extraction.text import TfidfVectorizer
 import numpy as np
 from functools import lru_cache
+import logging
 
 def get_data_frame(dataset_name="fb15k237"):
     dataset = get_dataset(dataset="fb15k237")
@@ -46,7 +47,7 @@ def cluster_relationship(df):
     # print the cluster for each value
     cluster_frame = [[], [], []]
     for value, cluster in zip(unique_values, clusters):
-        print(f'{value}: cluster {cluster}')
+        logging.info(f'{value}: cluster {cluster}')
         cluster_frame[cluster].append(value)
     return cluster_frame
 
@@ -56,8 +57,10 @@ def fetch_wikidata_value_for_id(id):
     try:
         word = requests.get(url=f"https://www.wikidata.org/wiki/Special:EntityData/Q{id}.json", timeout=5).json()
     except Exception as e:
-        print(f"Could not get the details for {id}. Skipping this relationship")
-        return
+        logging.error(e)
+        logging.info(f"Could not get the details for {id}. Skipping this relationship")
+        import sys
+        sys.exit(1)
     entity = word['entities']
     if entity.get(f'Q{id}'):
         sentence_desc=entity[f'Q{id}']['descriptions']
@@ -65,7 +68,7 @@ def fetch_wikidata_value_for_id(id):
             sentence = sentence_desc['en']['value']
             return sentence
     else:
-        print(f"Skipping relationship = {id} because no english description is available")
+        logging.info(f"Skipping relationship = {id} because no english description is available")
         return
 
 def get_triples_as_value(values, entity_to_id):
@@ -81,7 +84,7 @@ def get_triples_as_value(values, entity_to_id):
         head_val = fetch_wikidata_value_for_id(head_id)
         tail_val = fetch_wikidata_value_for_id(tail_id)
         if head_val == None or tail_val == None:
-            print("Skipping the HEAD and TAIL for the row")
+            logging.info("Skipping the HEAD and TAIL for the row")
             continue
         rows.append([head_val, row[1]['relationship'], tail_val])
     return rows
@@ -96,7 +99,7 @@ def get_triples_from_cluster(cluster_frame, df, entity_to_id):
         for relation in cluster:
             train_test_dev[i].extend(get_triples_as_value(df.loc[df['relationship'] == relation], entity_to_id))
 
-    print(train_test_dev)
+    logging.info(train_test_dev)
     # Save to CSV
     df_train = pd.DataFrame(np.asarray(train_test_dev[0]), columns = ['head','relationship','tail'])
     df_test = pd.DataFrame(np.asarray(train_test_dev[1]), columns = ['head','relationship','tail'])
@@ -106,7 +109,7 @@ def get_triples_from_cluster(cluster_frame, df, entity_to_id):
     df_val.to_csv('validation.csv', index=False)
 
 
-df, dataset_entity_id = get_data_frame("~/kg-super-engine/fb15k237")
+df, dataset_entity_id = get_data_frame("/home/barath/codespace/kg-super/kg-super-engine/fb15k237")
 
 cluster_frame = cluster_relationship(df)
 
