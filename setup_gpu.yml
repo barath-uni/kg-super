@@ -16,3 +16,4 @@ dependencies:
     - tqdm==4.62.3
     - pillow==8.0.1
     - pykeen==1.9.0
+    - ujson==5.6.0
