@@ -1,19 +1,6 @@
-import sys
-from typing import Any, List, TextIO, Tuple, Type, Union
 import numpy as np
-import click
-import torch
-import matplotlib.pyplot as plt
-import transformers as transf
 from pykeen.datasets import get_dataset
-from nltk.stem import PorterStemmer
-from keras.utils import pad_sequences
-import seaborn as sns
-from scipy.spatial.distance import pdist,squareform
-from sklearn.decomposition import PCA
 import requests
-import time
-import json
 import pandas as pd
 import glob
 from sklearn.cluster import KMeans
