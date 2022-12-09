@@ -27,7 +27,7 @@ class Table:
         if self.cur_file_writer is None:
             self.cur_file_writer = open(self.cur_file, 'w')
         for json_obj in json_value:
-            self.cur_file_writer.write(ujson.dumps(json_obj, ensure_ascii=False) + '\n')
+            self.cur_file_writer.write(ujson.dumps(json_obj, ensure_ascii=False))
         self.cur_num_lines += 1
         if self.cur_num_lines >= self.batch_size:
             self.cur_file_writer.close()
