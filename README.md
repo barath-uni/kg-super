@@ -34,5 +34,33 @@ Cosine-Similarity -
 
 L2 Distance - 
 
+### FB15k237
+
+Sentence Embedding -> Kmeans (k=3)
+----------------------------
+Number of Triples in Train = 82436
+Number of Unique Entities(HEAD, TAIL) in Train = 7644
+Number of Unique Relationship in Train = 55
+Number of Triples in Test = 200600
+Number of Unique Entities(HEAD, TAIL) in Test = 12969
+Number of Unique Relationship in Train = 132
+Number of Triples in Validation = 27080
+Number of Unique Entities(HEAD, TAIL) in Validation = 5961
+Number of Unique Relationship in Train = 50
+----------------------------
+
+TFIDVectorizer -> Kmeans(K=3)
+	----------------------------
+Number of Triples in Train = 67039
+Number of Unique Entities(HEAD, TAIL) in Train = 5873
+Number of Unique Relationship in Train = 38
+Number of Triples in Test = 42614
+Number of Unique Entities(HEAD, TAIL) in Test = 6489
+Number of Unique Relationship in Train = 20
+Number of Triples in Validation = 200463
+Number of Unique Entities(HEAD, TAIL) in Validation = 13970
+Number of Unique Relationship in Train = 179
+----------------------------
+
 
 
