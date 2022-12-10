@@ -10,6 +10,8 @@ from functools import lru_cache
 import logging
 import argparse
 from tqdm import tqdm 
+from sentence_transformers import SentenceTransformer
+embedder = SentenceTransformer('all-MiniLM-L6-v2')
 
 def get_data_frame(data_path, dataset_name="fb15k237"):
     dataset = get_dataset(dataset=dataset_name)
@@ -30,13 +32,22 @@ def get_data_frame(data_path, dataset_name="fb15k237"):
     # print the resulting DataFrame
     return df, dataset.entity_to_id
 
-def get_semantic_vectors(values):
-    return
+
+def sentence_embedding_cluster(df):
+    values = df['relationship'].unique()
+    corpus_embeddings = embedder.encode(values)
+    clustering_model = KMeans(n_clusters=3)
+    clustering_model.fit(corpus_embeddings)
+    cluster_assignment = clustering_model.labels_
+    clustered_sentences = [[] for i in range(3)]
+    for sentence_id, cluster_id in enumerate(cluster_assignment):
+        clustered_sentences[cluster_id].append(values[sentence_id])
+    return clustered_sentences
 
 def jaccard_sim_vectors(values):
     return
 
-def cluster_relationship(df):
+def tfid_cluster_relationship(df):
     unique_values = df['relationship'].unique()
 
     # create a TfidfVectorizer to represent each value as a vector
@@ -133,7 +144,8 @@ def get_arg_parser():
     parser.add_argument('--data_path', type = str, default = '/home/barath/kg-super-engine/kg-super-engine/fb15k237', help = 'path to output directory')
     parser.add_argument('--data', type = str, default='fb15k237', help ='pykeen dataset name for entity and relationship id lookup')
     parser.add_argument('--output_dir', type = str, default='/home/barath/kg-super-engine/kg-super-engine/output/', help ='Number of processes')
-    return parser 
+    parser.add_argument('--cluster_type', type = str, default='tfidvectorizer', help ='Vectorizing Algorithm')
+    return parser
 
 
 
@@ -141,5 +153,8 @@ if __name__ == "__main__":
 
     args = get_arg_parser().parse_args()
     df, dataset_entity_id = get_data_frame(args.data_path, args.data)
-    cluster_frame = cluster_relationship(df)
+    if args.cluster_type == "tfidvectorizer":
+        cluster_frame = tfid_cluster_relationship(df)
+    else:
+        cluster_frame = sentence_embedding_cluster(df)
     get_triples_from_cluster(cluster_frame, df, dataset_entity_id, args.output_dir)
