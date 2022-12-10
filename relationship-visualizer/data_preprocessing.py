@@ -8,11 +8,13 @@ from sklearn.feature_extraction.text import TfidfVectorizer
 import numpy as np
 from functools import lru_cache
 import logging
+import argparse
+from tqdm import tqdm 
 
-def get_data_frame(dataset_name="fb15k237"):
-    dataset = get_dataset(dataset="fb15k237")
+def get_data_frame(data_path, dataset_name="fb15k237"):
+    dataset = get_dataset(dataset=dataset_name)
     # get a list of all the .txt files in the current directory
-    txt_files = glob.glob(f'{dataset_name}/*.txt')
+    txt_files = glob.glob(f'{data_path}/*.txt')
 
     dataframe = list()
     # concatenate the contents of all the .txt files into a single string
@@ -28,10 +30,15 @@ def get_data_frame(dataset_name="fb15k237"):
     # print the resulting DataFrame
     return df, dataset.entity_to_id
 
+def get_semantic_vectors(values):
+    return
+
+def jaccard_sim_vectors(values):
+    return
+
 def cluster_relationship(df):
     unique_values = df['relationship'].unique()
 
-    print(len(unique_values))
     # create a TfidfVectorizer to represent each value as a vector
     vectorizer = TfidfVectorizer()
     vectors = vectorizer.fit_transform(unique_values)
@@ -76,22 +83,23 @@ def get_triples_as_value(values, entity_to_id):
     for row in values.iterrows():
         head = row[1]['head']
         tail=row[1]['tail']
+        # TODO: Skipping this lookup for now. Seems to be timetaking and not properly rendering in LISA
         # Get the head and tail corresponding to this
         # Use pykeen to find the corresponding entity to entity id
-        head_id=entity_to_id[head]
-        tail_id=entity_to_id[tail]
-        # Make a request to get the value
-        head_val = fetch_wikidata_value_for_id(head_id)
-        tail_val = fetch_wikidata_value_for_id(tail_id)
-        if head_val == None or tail_val == None:
-            logging.info("Skipping the HEAD and TAIL for the row")
-            continue
-        rows.append([head_val, row[1]['relationship'], tail_val])
+        # head_id=entity_to_id[head]
+        # tail_id=entity_to_id[tail]
+        # # Make a request to get the value
+        # head_val = fetch_wikidata_value_for_id(head_id)
+        # tail_val = fetch_wikidata_value_for_id(tail_id)
+        # if head_val == None or tail_val == None:
+        #     logging.info("Skipping the HEAD and TAIL for the row")
+        #     continue
+        rows.append([head, row[1]['relationship'], tail])
     return rows
 
 
 
-def get_triples_from_cluster(cluster_frame, df, entity_to_id):
+def get_triples_from_cluster(cluster_frame, df, entity_to_id, output_dir):
     train_test_dev = [list(), list(), list()]
     # For each cluster get the triple from the dataframe
     for i, cluster in enumerate(cluster_frame):
@@ -104,13 +112,34 @@ def get_triples_from_cluster(cluster_frame, df, entity_to_id):
     df_train = pd.DataFrame(np.asarray(train_test_dev[0]), columns = ['head','relationship','tail'])
     df_test = pd.DataFrame(np.asarray(train_test_dev[1]), columns = ['head','relationship','tail'])
     df_val = pd.DataFrame(np.asarray(train_test_dev[2]), columns = ['head','relationship','tail'])
-    df_train.to_csv('train.csv', index=False)
-    df_test.to_csv('test.csv', index=False)
-    df_val.to_csv('validation.csv', index=False)
+    df_train.to_csv(f'{output_dir}/train.csv', index=False)
+    df_test.to_csv(f'{output_dir}/test.csv', index=False)
+    df_val.to_csv(f'{output_dir}/validation.csv', index=False)
+    # Print some statistics for further use
+    print("----------------------------")
+    print(f"Number of Triples in Train = {df_train.shape[0]}")
+    print(f"Number of Unique Entities(HEAD, TAIL) in Train = {len(np.unique(df_train[['head', 'tail']].values))}")
+    print(f"Number of Unique Relationship in Train = {len(np.unique(df_train[['relationship']].values))}")
+    print(f"Number of Triples in Test = {df_test.shape[0]}")
+    print(f"Number of Unique Entities(HEAD, TAIL) in Test = {len(np.unique(df_test[['head', 'tail']].values))}")
+    print(f"Number of Unique Relationship in Train = {len(np.unique(df_test[['relationship']].values))}")
+    print(f"Number of Triples in Validation = {df_val.shape[0]}")
+    print(f"Number of Unique Entities(HEAD, TAIL) in Validation = {len(np.unique(df_val[['head', 'tail']].values))}")
+    print(f"Number of Unique Relationship in Train = {len(np.unique(df_val[['relationship']].values))}")
+    print("----------------------------")
+
+def get_arg_parser():
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--data_path', type = str, default = '/home/barath/kg-super-engine/kg-super-engine/fb15k237', help = 'path to output directory')
+    parser.add_argument('--data', type = str, default='fb15k237', help ='pykeen dataset name for entity and relationship id lookup')
+    parser.add_argument('--output_dir', type = str, default='/home/barath/kg-super-engine/kg-super-engine/output/', help ='Number of processes')
+    return parser 
 
 
-df, dataset_entity_id = get_data_frame("/home/barath/codespace/kg-super/kg-super-engine/fb15k237")
 
-cluster_frame = cluster_relationship(df)
+if __name__ == "__main__":
 
-triples_from_cluster = get_triples_from_cluster(cluster_frame, df, dataset_entity_id)
+    args = get_arg_parser()
+    df, dataset_entity_id = get_data_frame(args.data_path, args.data)
+    cluster_frame = cluster_relationship(df)
+    get_triples_from_cluster(cluster_frame, df, dataset_entity_id, args.output_dir)
