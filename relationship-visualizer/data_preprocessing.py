@@ -139,7 +139,7 @@ def get_arg_parser():
 
 if __name__ == "__main__":
 
-    args = get_arg_parser()
+    args = get_arg_parser().parse_args()
     df, dataset_entity_id = get_data_frame(args.data_path, args.data)
     cluster_frame = cluster_relationship(df)
     get_triples_from_cluster(cluster_frame, df, dataset_entity_id, args.output_dir)
