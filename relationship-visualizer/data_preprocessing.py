@@ -29,11 +29,13 @@ def download_nell_dataset():
         for version in versions:
             # Download with a request command and store to a file
             file_download = requests.get(base_url.format(version, split)).text
+            with open("response.txt", "w") as f:
+                f.write(file_download)
+            pd_val = pd.read_csv("response.txt", sep='\t', names=['head', 'relationship', 'tail'])
             # Concatenate the pd
-            version_data.append(file_download)
+            version_data.append(pd_val)
     # Concatenate the whole thing as a pandas dataframe and return
     df = pd.concat([data for data in version_data], axis=0)
-    df.columns = ['head', 'relationship', 'tail']
     return df
 
 def get_wikidata5m_relationship_description():
