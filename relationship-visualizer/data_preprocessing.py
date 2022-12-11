@@ -19,23 +19,40 @@ transformers_logger.setLevel(logging.WARNING)
 
 embedder = SentenceTransformer('all-MiniLM-L6-v2')
 
+def download_nell_dataset():
+    base_url = "https://raw.githubusercontent.com/kkteru/grail/master/data/nell_{0}_ind/{1}.txt"
+    # Download the dataset from each version
+    versions = ['v1', 'v2', 'v3', 'v4']
+    splits = ['train', 'test', 'valid']
+    for split in splits:
+        version_data = list()
+        for version in versions:
+            # Download with a request command and store to a file
+            file_download = requests.get(base_url.format(version, split)).text
+            # Concatenate the pd
+            version_data.append(file_download)
+    # Concatenate the whole thing as a pandas dataframe and return
+    df = pd.concat([data for data in version_data], axis=0)
+    df.columns = ['head', 'relationship', 'tail']
+    return df
+
 def get_wikidata5m_relationship_description():
     dataset = get_dataset(dataset="wikidata5m")
     relationship_dict = dict()
     # Use pykeen to get the relationship ids
     for value in dataset.relation_to_id.keys():
-        logging.debug(f"LOADing for {value}")
+        logging.info(f"LOADing for {value}")
         try:
             word = requests.get(url=f"https://www.wikidata.org/wiki/Special:EntityData/{value}.json").json()
         except Exception as e:
-            logging.debug(f"Could not get the details for {value}. Skipping this relationship")
+            logging.info(f"Could not get the details for {value}. Skipping this relationship")
             continue
         # Get the english description from the json response
         sentence_desc=word['entities'][f'{value}']['descriptions']
         if sentence_desc.get('en'):
             sentence = sentence_desc['en']['value']
         else:
-            logging.debug(f"Skipping relationship = {value} because no english description is available")
+            logging.info(f"Skipping relationship = {value} because no english description is available")
             continue
         # Split and add it to the array
         relationship_dict[value] = sentence
@@ -45,32 +62,36 @@ def get_wikidata5m_relationship_description():
     return relationship_dict
 
 def get_data_frame(data_path, dataset_name="fb15k237"):
-    dataset = get_dataset(dataset=dataset_name)
-    # get a list of all the .txt files in the current directory
-    txt_files = glob.glob(f'{data_path}/*.txt')
+    
+    logging.info(df.head(n=5))
+    if dataset_name != "nell995":
+        dataset = get_dataset(dataset=dataset_name)
+        entity_to_id = dataset.entity_to_id
+        # get a list of all the .txt files in the current directory
+        txt_files = glob.glob(f'{data_path}/*.txt')
 
-    dataframe = list()
-    # concatenate the contents of all the .txt files into a single string
-    txt = 'head\trelationship\ttail\n'
-    for i, file in enumerate(txt_files):
-        df = pd.read_csv(file, sep='\t', names=['head', 'relationship', 'tail'])
-        dataframe.append(df)
-    df = pd.concat([dataframe[0], dataframe[1], dataframe[2]], axis=0)
-    logging.debug(df.head(n=5))
-    # Run a fetch to get all the description for given relationship and store in a dict
-    if dataset_name == "wikidata5m":
-        relationship_dict = get_wikidata5m_relationship_description()
-        # Save this dict for further processing
-        with open('somethingstore.json', 'w') as f:
-            f.write(relationship_dict)
-        for rel_id in relationship_dict:
-            relation_desc = relationship_dict[rel_id]
-            df['relationship'] = np.where(df['relationship'] == rel_id, relation_desc, df['relationship'])
-    logging.debug(df['relationship'])
-    # create a DataFrame from the list of lines
-    # df = pd.DataFrame(lines, columns=['head', 'relationship', 'tail'])
-    # logging.debug the resulting DataFrame
-    return df, dataset.entity_to_id
+        dataframe = list()
+        # concatenate the contents of all the .txt files into a single string
+        txt = 'head\trelationship\ttail\n'
+        for i, file in enumerate(txt_files):
+            df = pd.read_csv(file, sep='\t', names=['head', 'relationship', 'tail'])
+            dataframe.append(df)
+        df = pd.concat([dataframe[0], dataframe[1], dataframe[2]], axis=0)
+        # Run a fetch to get all the description for given relationship and store in a dict
+        if dataset_name == "wikidata5m":
+            relationship_dict = get_wikidata5m_relationship_description()
+            # Save this dict for further processing
+            with open('somethingstore.json', 'w') as f:
+                f.write(relationship_dict)
+            for rel_id in relationship_dict:
+                relation_desc = relationship_dict[rel_id]
+                df['relationship'] = np.where(df['relationship'] == rel_id, relation_desc, df['relationship'])
+    else:
+        # If nell995
+        df = download_nell_dataset()
+        # Head, relationship, tail all have descriptions mostly, do not need additional processing at this stage
+        entity_to_id = ""
+    return df, entity_to_id
 
 
 def sentence_embedding_cluster(df):
@@ -102,7 +123,7 @@ def tfid_cluster_relationship(df):
 
     # predict the cluster for each vector
     clusters = kmeans.predict(vectors)
-    # logging.debug the cluster for each value
+    # logging.info the cluster for each value
     cluster_frame = [[], [], []]
     for value, cluster in zip(unique_values, clusters):
         logging.info(f'{value}: cluster {cluster}')
@@ -166,18 +187,18 @@ def get_triples_from_cluster(cluster_frame, df, entity_to_id, output_dir):
     df_train.to_csv(f'{output_dir}/train.csv', index=False)
     df_test.to_csv(f'{output_dir}/test.csv', index=False)
     df_val.to_csv(f'{output_dir}/validation.csv', index=False)
-    # logging.debug some statistics for further use
-    logging.debug("----------------------------")
-    logging.debug(f"Number of Triples in Train = {df_train.shape[0]}")
-    logging.debug(f"Number of Unique Entities(HEAD, TAIL) in Train = {len(np.unique(df_train[['head', 'tail']].values))}")
-    logging.debug(f"Number of Unique Relationship in Train = {len(np.unique(df_train[['relationship']].values))}")
-    logging.debug(f"Number of Triples in Test = {df_test.shape[0]}")
-    logging.debug(f"Number of Unique Entities(HEAD, TAIL) in Test = {len(np.unique(df_test[['head', 'tail']].values))}")
-    logging.debug(f"Number of Unique Relationship in Train = {len(np.unique(df_test[['relationship']].values))}")
-    logging.debug(f"Number of Triples in Validation = {df_val.shape[0]}")
-    logging.debug(f"Number of Unique Entities(HEAD, TAIL) in Validation = {len(np.unique(df_val[['head', 'tail']].values))}")
-    logging.debug(f"Number of Unique Relationship in Train = {len(np.unique(df_val[['relationship']].values))}")
-    logging.debug("----------------------------")
+    # logging.info some statistics for further use
+    logging.info("----------------------------")
+    logging.info(f"Number of Triples in Train = {df_train.shape[0]}")
+    logging.info(f"Number of Unique Entities(HEAD, TAIL) in Train = {len(np.unique(df_train[['head', 'tail']].values))}")
+    logging.info(f"Number of Unique Relationship in Train = {len(np.unique(df_train[['relationship']].values))}")
+    logging.info(f"Number of Triples in Test = {df_test.shape[0]}")
+    logging.info(f"Number of Unique Entities(HEAD, TAIL) in Test = {len(np.unique(df_test[['head', 'tail']].values))}")
+    logging.info(f"Number of Unique Relationship in Train = {len(np.unique(df_test[['relationship']].values))}")
+    logging.info(f"Number of Triples in Validation = {df_val.shape[0]}")
+    logging.info(f"Number of Unique Entities(HEAD, TAIL) in Validation = {len(np.unique(df_val[['head', 'tail']].values))}")
+    logging.info(f"Number of Unique Relationship in Train = {len(np.unique(df_val[['relationship']].values))}")
+    logging.info("----------------------------")
 
 def get_arg_parser():
     parser = argparse.ArgumentParser()
@@ -193,8 +214,8 @@ if __name__ == "__main__":
 
     args = get_arg_parser().parse_args()
     df, dataset_entity_id = get_data_frame(args.data_path, args.data)
-    # if args.cluster_type == "tfidvectorizer":
-    #     cluster_frame = tfid_cluster_relationship(df)
-    # else:
-    #     cluster_frame = sentence_embedding_cluster(df)
-    # get_triples_from_cluster(cluster_frame, df, dataset_entity_id, args.output_dir)
+    if args.cluster_type == "tfidvectorizer":
+        cluster_frame = tfid_cluster_relationship(df)
+    else:
+        cluster_frame = sentence_embedding_cluster(df)
+    get_triples_from_cluster(cluster_frame, df, dataset_entity_id, args.output_dir)

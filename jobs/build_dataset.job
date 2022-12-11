@@ -27,3 +27,9 @@ conda activate kg-super
 python3 relationship-visualizer/data_preprocessing.py --data_path /home/barath/kg-super-engine/kg-super-engine/wikidata5m --data wikidata5m --output_dir /home/barath/kg-super-engine/kg-super-engine/output/wikidata5m/tfidvectorizer
 # Cluster with Sentence Embedding
 python3 relationship-visualizer/data_preprocessing.py --cluster_type sentenceembedding --data_path /home/barath/kg-super-engine/kg-super-engine/wikidata5m --data wikidata5m --output_dir /home/barath/kg-super-engine/kg-super-engine/output/wikidata5m/sentence
+
+# Build dataset for nell995
+# Cluster with TFID Vectorizer
+python3 relationship-visualizer/data_preprocessing.py --data_path /home/barath/kg-super-engine/kg-super-engine/nell995 --data nell995 --output_dir /home/barath/kg-super-engine/kg-super-engine/output/nell995/tfidvectorizer
+# Cluster with Sentence Embedding
+python3 relationship-visualizer/data_preprocessing.py --cluster_type sentenceembedding --data_path /home/barath/kg-super-engine/kg-super-engine/nell995 --data nell995 --output_dir /home/barath/kg-super-engine/kg-super-engine/output/nell995/sentence
