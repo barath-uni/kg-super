@@ -49,8 +49,7 @@ def get_data_frame(data_path, dataset_name="fb15k237"):
     # concatenate the contents of all the .txt files into a single string
     txt = 'head\trelationship\ttail\n'
     for i, file in enumerate(txt_files):
-        file = txt+file
-        df = pd.read_csv(file, sep='\t')
+        df = pd.read_csv(file, sep='\t', names=['head', 'relationship', 'tail'])
         dataframe.append(df)
     df = pd.concat([dataframe[0], dataframe[1], dataframe[2]], axis=0)
     print(df.head(n=5))
