@@ -153,8 +153,8 @@ if __name__ == "__main__":
 
     args = get_arg_parser().parse_args()
     df, dataset_entity_id = get_data_frame(args.data_path, args.data)
-    if args.cluster_type == "tfidvectorizer":
-        cluster_frame = tfid_cluster_relationship(df)
-    else:
-        cluster_frame = sentence_embedding_cluster(df)
-    get_triples_from_cluster(cluster_frame, df, dataset_entity_id, args.output_dir)
+    # if args.cluster_type == "tfidvectorizer":
+    #     cluster_frame = tfid_cluster_relationship(df)
+    # else:
+    #     cluster_frame = sentence_embedding_cluster(df)
+    # get_triples_from_cluster(cluster_frame, df, dataset_entity_id, args.output_dir)
