@@ -24,8 +24,8 @@ def download_nell_dataset():
     # Download the dataset from each version
     versions = ['v1', 'v2', 'v3', 'v4']
     splits = ['train', 'test', 'valid']
+    version_data = list()
     for split in splits:
-        version_data = list()
         for version in versions:
             # Download with a request command and store to a file
             file_download = requests.get(base_url.format(version, split)).text
