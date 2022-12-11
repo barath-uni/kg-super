@@ -18,7 +18,7 @@ cd $HOME/kg-super-engine/kg-super-engine
 eval "$(conda shell.bash hook)"
 conda activate kg-super
 
-cp -r /home/barath/kg-super-engine/kg-super-engine/output/wikidata5m/sentence/*.tsv /home/barath/kg-super-engine/kg-bert/kg-bert/data/FB15k-237/
+cp -r /home/barath/kg-super-engine/kg-super-engine/output/fb15k237/sentence/*.tsv /home/barath/kg-super-engine/kg-bert/kg-bert/data/FB15k-237/
 
 # Trigger the relation prediction from the parent folder kg-bert
 
