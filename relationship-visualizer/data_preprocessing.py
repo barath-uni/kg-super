@@ -62,8 +62,6 @@ def get_wikidata5m_relationship_description():
     return relationship_dict
 
 def get_data_frame(data_path, dataset_name="fb15k237"):
-    
-    logging.info(df.head(n=5))
     if dataset_name != "nell995":
         dataset = get_dataset(dataset=dataset_name)
         entity_to_id = dataset.entity_to_id
