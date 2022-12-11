@@ -39,7 +39,7 @@ def get_wikidata5m_relationship_description():
         time.sleep(1)
     # Fetch the description for the ids
     return relationship_dict
-    
+
 def get_data_frame(data_path, dataset_name="fb15k237"):
     dataset = get_dataset(dataset=dataset_name)
     # get a list of all the .txt files in the current directory
@@ -53,7 +53,7 @@ def get_data_frame(data_path, dataset_name="fb15k237"):
         df = pd.read_csv(file, sep='\t')
         dataframe.append(df)
     df = pd.concat([dataframe[0], dataframe[1], dataframe[2]], axis=0)
-    
+    print(df.head(n=5))
     # Run a fetch to get all the description for given relationship and store in a dict
     if dataset_name == "wikidata5m":
         relationship_dict = get_wikidata5m_relationship_description()
