@@ -36,7 +36,7 @@ def get_arg_parser():
 def main():
     start = time.time()
     args = get_arg_parser().parse_args()
-    print(f"ARGS: {args}")
+    logging.debug(f"ARGS: {args}")
 
     out_dir = Path(args.out_dir)
     out_dir.mkdir(exist_ok=True, parents=True)
@@ -47,12 +47,12 @@ def main():
 
     max_lines_to_read = args.num_lines_read
     if args.num_lines_in_dump <= 0:
-        print("Counting lines")
+        logging.debug("Counting lines")
         total_num_lines = count_lines(input_file, max_lines_to_read)
     else:
         total_num_lines = args.num_lines_in_dump
 
-    print("Starting processes")
+    logging.debug("Starting processes")
     maxsize = 10 * args.processes
 
     # Queues for inputs/outputs
@@ -85,7 +85,7 @@ def main():
         work_processes.append(work_process)
 
     read_process.join()
-    print(f"Done! Read {num_lines_read.value} lines")
+    logging.debug(f"Done! Read {num_lines_read.value} lines")
     # Cause all worker process to quit
     for work_process in work_processes:
         work_queue.put(None)
@@ -95,7 +95,7 @@ def main():
     output_queue.put(None)
     write_process.join()
 
-    print(f"Finished processing {num_lines_read.value} in {time.time() - start}s")
+    logging.debug(f"Finished processing {num_lines_read.value} in {time.time() - start}s")
 
 
 if __name__ == "__main__":

@@ -4,6 +4,10 @@
 import os
 import ujson as json
 
+import logging
+logging.basicConfig(level=logging.INFO)
+transformers_logger = logging.getLogger("transformers")
+transformers_logger.setLevel(logging.WARNING)
 
 def jsonl_generator(fname):
     """ Returns generator for jsonl file """
@@ -21,6 +25,6 @@ def get_batch_files(fdir):
     """ Returns paths to files in fdir """
     filenames = os.listdir(fdir)
     filenames = [os.path.join(fdir, f) for f in filenames]
-    print(f"Fetched {len(filenames)} files from {fdir}")
+    logging.debug(f"Fetched {len(filenames)} files from {fdir}")
     return filenames
 

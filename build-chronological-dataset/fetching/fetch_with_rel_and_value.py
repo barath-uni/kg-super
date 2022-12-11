@@ -13,6 +13,10 @@ from multiprocessing import Pool
 from functools import partial
 
 from fetching.utils import jsonl_generator, get_batch_files
+import logging
+logging.basicConfig(level=logging.INFO)
+transformers_logger = logging.getLogger("transformers")
+transformers_logger.setLevel(logging.WARNING)
 
 
 def get_arg_parser():
@@ -45,9 +49,9 @@ def main():
     ):
         filtered.extend(output)
 
-    print(f"Extracted {len(filtered)} rows:")
+    logging.debug(f"Extracted {len(filtered)} rows:")
     for i, item in enumerate(filtered):
-        print(f"Row {i}: {item}")
+        logging.debug(f"Row {i}: {item}")
 
 
 if __name__ == "__main__":

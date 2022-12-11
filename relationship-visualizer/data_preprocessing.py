@@ -12,6 +12,10 @@ import argparse
 from tqdm import tqdm 
 from sentence_transformers import SentenceTransformer
 import time
+import logging
+logging.basicConfig(level=logging.INFO)
+transformers_logger = logging.getLogger("transformers")
+transformers_logger.setLevel(logging.WARNING)
 
 embedder = SentenceTransformer('all-MiniLM-L6-v2')
 
@@ -20,18 +24,18 @@ def get_wikidata5m_relationship_description():
     relationship_dict = dict()
     # Use pykeen to get the relationship ids
     for value in dataset.relation_to_id.keys():
-        print(f"LOADing for {value}")
+        logging.debug(f"LOADing for {value}")
         try:
             word = requests.get(url=f"https://www.wikidata.org/wiki/Special:EntityData/{value}.json").json()
         except Exception as e:
-            print(f"Could not get the details for {value}. Skipping this relationship")
+            logging.debug(f"Could not get the details for {value}. Skipping this relationship")
             continue
         # Get the english description from the json response
         sentence_desc=word['entities'][f'{value}']['descriptions']
         if sentence_desc.get('en'):
             sentence = sentence_desc['en']['value']
         else:
-            print(f"Skipping relationship = {value} because no english description is available")
+            logging.debug(f"Skipping relationship = {value} because no english description is available")
             continue
         # Split and add it to the array
         relationship_dict[value] = sentence
@@ -52,17 +56,17 @@ def get_data_frame(data_path, dataset_name="fb15k237"):
         df = pd.read_csv(file, sep='\t', names=['head', 'relationship', 'tail'])
         dataframe.append(df)
     df = pd.concat([dataframe[0], dataframe[1], dataframe[2]], axis=0)
-    print(df.head(n=5))
+    logging.debug(df.head(n=5))
     # Run a fetch to get all the description for given relationship and store in a dict
     if dataset_name == "wikidata5m":
         relationship_dict = get_wikidata5m_relationship_description()
         for rel_id in relationship_dict:
             relation_desc = relationship_dict[rel_id]
             df['relationship'] = np.where(df['relationship'] == rel_id, relation_desc, df['col1'])
-    print(df['relationship'])
+    logging.debug(df['relationship'])
     # create a DataFrame from the list of lines
     # df = pd.DataFrame(lines, columns=['head', 'relationship', 'tail'])
-    # print the resulting DataFrame
+    # logging.debug the resulting DataFrame
     return df, dataset.entity_to_id
 
 
@@ -95,7 +99,7 @@ def tfid_cluster_relationship(df):
 
     # predict the cluster for each vector
     clusters = kmeans.predict(vectors)
-    # print the cluster for each value
+    # logging.debug the cluster for each value
     cluster_frame = [[], [], []]
     for value, cluster in zip(unique_values, clusters):
         logging.info(f'{value}: cluster {cluster}')
@@ -159,18 +163,18 @@ def get_triples_from_cluster(cluster_frame, df, entity_to_id, output_dir):
     df_train.to_csv(f'{output_dir}/train.csv', index=False)
     df_test.to_csv(f'{output_dir}/test.csv', index=False)
     df_val.to_csv(f'{output_dir}/validation.csv', index=False)
-    # Print some statistics for further use
-    print("----------------------------")
-    print(f"Number of Triples in Train = {df_train.shape[0]}")
-    print(f"Number of Unique Entities(HEAD, TAIL) in Train = {len(np.unique(df_train[['head', 'tail']].values))}")
-    print(f"Number of Unique Relationship in Train = {len(np.unique(df_train[['relationship']].values))}")
-    print(f"Number of Triples in Test = {df_test.shape[0]}")
-    print(f"Number of Unique Entities(HEAD, TAIL) in Test = {len(np.unique(df_test[['head', 'tail']].values))}")
-    print(f"Number of Unique Relationship in Train = {len(np.unique(df_test[['relationship']].values))}")
-    print(f"Number of Triples in Validation = {df_val.shape[0]}")
-    print(f"Number of Unique Entities(HEAD, TAIL) in Validation = {len(np.unique(df_val[['head', 'tail']].values))}")
-    print(f"Number of Unique Relationship in Train = {len(np.unique(df_val[['relationship']].values))}")
-    print("----------------------------")
+    # logging.debug some statistics for further use
+    logging.debug("----------------------------")
+    logging.debug(f"Number of Triples in Train = {df_train.shape[0]}")
+    logging.debug(f"Number of Unique Entities(HEAD, TAIL) in Train = {len(np.unique(df_train[['head', 'tail']].values))}")
+    logging.debug(f"Number of Unique Relationship in Train = {len(np.unique(df_train[['relationship']].values))}")
+    logging.debug(f"Number of Triples in Test = {df_test.shape[0]}")
+    logging.debug(f"Number of Unique Entities(HEAD, TAIL) in Test = {len(np.unique(df_test[['head', 'tail']].values))}")
+    logging.debug(f"Number of Unique Relationship in Train = {len(np.unique(df_test[['relationship']].values))}")
+    logging.debug(f"Number of Triples in Validation = {df_val.shape[0]}")
+    logging.debug(f"Number of Unique Entities(HEAD, TAIL) in Validation = {len(np.unique(df_val[['head', 'tail']].values))}")
+    logging.debug(f"Number of Unique Relationship in Train = {len(np.unique(df_val[['relationship']].values))}")
+    logging.debug("----------------------------")
 
 def get_arg_parser():
     parser = argparse.ArgumentParser()
