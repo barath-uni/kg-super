@@ -11,8 +11,35 @@ import logging
 import argparse
 from tqdm import tqdm 
 from sentence_transformers import SentenceTransformer
+import time
+
 embedder = SentenceTransformer('all-MiniLM-L6-v2')
 
+def get_wikidata5m_relationship_description():
+    dataset = get_dataset(dataset="wikidata5m")
+    relationship_dict = dict()
+    # Use pykeen to get the relationship ids
+    for value in dataset.relation_to_id.keys():
+        print(f"LOADing for {value}")
+        try:
+            word = requests.get(url=f"https://www.wikidata.org/wiki/Special:EntityData/{value}.json").json()
+        except Exception as e:
+            print(f"Could not get the details for {value}. Skipping this relationship")
+            continue
+        # Get the english description from the json response
+        sentence_desc=word['entities'][f'{value}']['descriptions']
+        if sentence_desc.get('en'):
+            sentence = sentence_desc['en']['value']
+        else:
+            print(f"Skipping relationship = {value} because no english description is available")
+            continue
+        # Split and add it to the array
+        relationship_dict[value] = sentence
+#         Slow down the request because of rate limiter
+        time.sleep(1)
+    # Fetch the description for the ids
+    return relationship_dict
+    
 def get_data_frame(data_path, dataset_name="fb15k237"):
     dataset = get_dataset(dataset=dataset_name)
     # get a list of all the .txt files in the current directory
@@ -22,13 +49,20 @@ def get_data_frame(data_path, dataset_name="fb15k237"):
     # concatenate the contents of all the .txt files into a single string
     txt = 'head\trelationship\ttail\n'
     for i, file in enumerate(txt_files):
+        file = txt+file
         df = pd.read_csv(file, sep='\t')
         dataframe.append(df)
     df = pd.concat([dataframe[0], dataframe[1], dataframe[2]], axis=0)
     
+    # Run a fetch to get all the description for given relationship and store in a dict
+    if dataset_name == "wikidata5m":
+        relationship_dict = get_wikidata5m_relationship_description()
+        for rel_id in relationship_dict:
+            relation_desc = relationship_dict[rel_id]
+            df['relationship'] = np.where(df['relationship'] == rel_id, relation_desc, df['col1'])
+    print(df['relationship'])
     # create a DataFrame from the list of lines
     # df = pd.DataFrame(lines, columns=['head', 'relationship', 'tail'])
-
     # print the resulting DataFrame
     return df, dataset.entity_to_id
 

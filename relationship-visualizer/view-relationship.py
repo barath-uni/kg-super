@@ -50,7 +50,7 @@ def generate_relationship_sim_matrix(dataset_name, similarity_type="cosine"):
         for value in dataset.relation_to_id.keys():
             print(f"LOADing for {value}")
             try:
-                word = requests.get(url=f"https://www.wikidata.org/wiki/Special:EntityData/{value}.json").json()
+                word = requests.get(url=f"https://www.wikidata.org/wiki/Special:EntityData/Q9098.json").json()
             except Exception as e:
                 print(f"Could not get the details for {value}. Skipping this relationship")
                 continue
@@ -99,7 +99,7 @@ def generate_relationship_sim_matrix(dataset_name, similarity_type="cosine"):
         plt.colorbar(label="Farthest to closest", orientation="vertical")
         plt.title(dataset_name)
         plt.show()
-        
+
     elif similarity_type=="cosine":
         # Load pretrained model/tokenizer
         # :TODO Use FastTokenizer
