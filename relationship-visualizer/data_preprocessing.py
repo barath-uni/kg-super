@@ -60,9 +60,12 @@ def get_data_frame(data_path, dataset_name="fb15k237"):
     # Run a fetch to get all the description for given relationship and store in a dict
     if dataset_name == "wikidata5m":
         relationship_dict = get_wikidata5m_relationship_description()
+        # Save this dict for further processing
+        with open('somethingstore.json', 'w') as f:
+            f.write(relationship_dict)
         for rel_id in relationship_dict:
             relation_desc = relationship_dict[rel_id]
-            df['relationship'] = np.where(df['relationship'] == rel_id, relation_desc, df['col1'])
+            df['relationship'] = np.where(df['relationship'] == rel_id, relation_desc, df['relationship'])
     logging.debug(df['relationship'])
     # create a DataFrame from the list of lines
     # df = pd.DataFrame(lines, columns=['head', 'relationship', 'tail'])
