@@ -1,0 +1,4 @@
+head,relationship,tail
+concept:vegetable:beans,concept:agriculturalproductcutintogeometricshape,concept:geometricshape:lengths
+concept:agriculturalproduct:butter,concept:agriculturalproductcutintogeometricshape,concept:geometricshape:dice
+concept:meat:salmon,concept:agriculturalproductcutintogeometricshape,concept:geometricshape:dice
