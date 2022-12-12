@@ -59,7 +59,7 @@ def get_wikidata5m_relationship_description():
         # Split and add it to the array
         relationship_dict[value] = sentence.encode('utf-8')
 #         Slow down the request because of rate limiter
-        time.sleep(1)
+        time.sleep(0.5)
     # Fetch the description for the ids
     return relationship_dict
 
@@ -69,7 +69,6 @@ def get_data_frame(data_path, dataset_name="fb15k237"):
         entity_to_id = dataset.entity_to_id
         # get a list of all the .txt files in the current directory
         txt_files = glob.glob(f'{data_path}/*.txt')
-
         dataframe = list()
         # concatenate the contents of all the .txt files into a single string
         txt = 'head\trelationship\ttail\n'
@@ -81,8 +80,11 @@ def get_data_frame(data_path, dataset_name="fb15k237"):
         if dataset_name == "wikidata5m":
             relationship_dict = get_wikidata5m_relationship_description()
             # Save this dict for further processing
-            with open('somethingstore.json', 'w') as f:
-                f.write(str(relationship_dict))
+            try:
+                with open('somethingstore.json', 'w') as f:
+                    f.write(str(relationship_dict).encode('utf8'))
+            except Exception as e:
+                logging.info("There was an exception while saving the relationship dict. Possibly because of encoding", e)
             for rel_id in relationship_dict:
                 relation_desc = relationship_dict[rel_id]
                 df['relationship'] = np.where(df['relationship'] == rel_id, relation_desc, df['relationship'])
