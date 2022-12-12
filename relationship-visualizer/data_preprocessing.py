@@ -57,7 +57,7 @@ def get_wikidata5m_relationship_description():
             logging.info(f"Skipping relationship = {value} because no english description is available")
             continue
         # Split and add it to the array
-        relationship_dict[value] = sentence
+        relationship_dict[value] = sentence.encode('utf-8')
 #         Slow down the request because of rate limiter
         time.sleep(1)
     # Fetch the description for the ids
