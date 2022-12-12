@@ -77,6 +77,31 @@ Number of Unique Entities(HEAD, TAIL) in Validation = 13970
 
 Number of Unique Relationship in Train = 179
 
+#### Nell995
 
+- TFIDVectorizer -> Kmeans(K=3)
 
+----------------------------
+Number of Triples in Train = 24722
+Number of Unique Entities(HEAD, TAIL) in Train = 6600
+Number of Unique Relationship in Train = 132
+Number of Triples in Test = 3
+Number of Unique Entities(HEAD, TAIL) in Test = 5
+Number of Unique Relationship in Train = 1
+Number of Triples in Validation = 18
+Number of Unique Entities(HEAD, TAIL) in Validation = 13
+Number of Unique Relationship in Train = 1
+
+- Sentence Embedding -> Kmeans(K=3)
+
+----------------------------
+Number of Triples in Train = 13032
+Number of Unique Entities(HEAD, TAIL) in Train = 4962
+Number of Unique Relationship in Train = 79
+Number of Triples in Test = 8515
+Number of Unique Entities(HEAD, TAIL) in Test = 1336
+Number of Unique Relationship in Train = 25
+Number of Triples in Validation = 3196
+Number of Unique Entities(HEAD, TAIL) in Validation = 1196
+Number of Unique Relationship in Train = 30
 
