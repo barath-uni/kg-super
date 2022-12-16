@@ -1,4 +1,3 @@
-head	relationship	tail
 /m/08966	/travel/travel_destination/climate./travel/travel_destination_monthly_climate/month	/m/05lf_
 /m/01hww_	/music/performance_role/regular_performances./music/group_membership/group	/m/01q99h
 /m/09v3jyg	/film/film/release_date_s./film/film_regional_release_date/film_release_region	/m/0f8l9c

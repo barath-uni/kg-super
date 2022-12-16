@@ -9,15 +9,112 @@ import numpy as np
 from functools import lru_cache
 import logging
 import argparse
+from sklearn.metrics import pairwise_distances
 from tqdm import tqdm 
 from sentence_transformers import SentenceTransformer
 import time
 import logging
+import matplotlib.pyplot as plt
+
 logging.basicConfig(level=logging.INFO)
 transformers_logger = logging.getLogger("transformers")
 transformers_logger.setLevel(logging.WARNING)
 
 embedder = SentenceTransformer('all-MiniLM-L6-v2')
+
+def radially_select_clusters(df):
+    relations = df['relationship'].unique()
+    total_triples = df.shape[0]
+    print(total_triples)
+    # This is a simple change to the usual K-means, where we randomly select a cluster and radially choose items
+    #  till 80% of triple is reached for train, 10% for test, 10% for validation
+    # Create a TfidfVectorizer and fit it to the sentences
+    vectorizer = TfidfVectorizer()
+    vectors = vectorizer.fit_transform(relations)
+
+    # Use KMeans to find cluster centroids
+    kmeans = KMeans(n_clusters=3)
+    kmeans.fit(vectors)
+    already_seen_indexes = list()
+    clustered_relation = list()
+    def select_triples(cluster_index,split_perc=0.8):
+        # Select a cluster centroid at random
+        cluster_centroid = kmeans.cluster_centers_[cluster_index]
+
+        # Select values radially outward until 80% of the sentences are selected
+        selection_index = []
+        prev_sentence_count = 0
+        radial_distance = 0.1
+        triples_list = list()
+        for i, (relation, vector) in enumerate(zip(relations, vectors)):
+            # We skip if the relation and vector has already been added to one of the splits (This is definitely a naive way of doing this split.
+            # But there is no other way to manipulate the indexes without running into axis errors)
+            if i in already_seen_indexes:
+                continue
+            print("CHECK FOR SEEING IF THE TOTAL TRIPLES IS GREATER THAN", split_perc*total_triples)
+            if len(triples_list) > split_perc*total_triples:
+                print("CURRENT LENGTH OF THE TRIPLES LIST", len(triples_list))
+                print("IT IS GREATER THAN TRIPLES REQUIRED", split_perc*total_triples)
+                break
+            
+            # Compute the distance between the sentence vector and the cluster centroid
+            distance = pairwise_distances(vector.reshape(1,-1), cluster_centroid.reshape(1,-1))
+            
+            # If the distance is within the desired range, add the sentence to the selected sentences
+            if distance <= radial_distance:
+                selection_index.append(i)
+                triples_list.extend(get_triples_as_value(df.loc[df['relationship'] == relation]))
+                if relation in clustered_relation:
+                    print(f"NOTEEEEEEEEEE... Relation = {relation} already seen.")
+                else:
+                    clustered_relation.append(relation)
+            # Check if previous sentence count is same as the current sentence count if it is then increase the distance and continue
+            if prev_sentence_count == len(selection_index):
+                radial_distance = radial_distance+0.1
+            
+            # Reset the prev_sentence count to length of the sentences
+            prev_sentence_count = len(selection_index)
+        already_seen_indexes.extend(selection_index)
+        return triples_list
+    
+    train_triples = select_triples(2)
+    # Remove the selected relations from the all relations list and continue with the next centroid
+
+    dev_triples = select_triples(0, 0.1)
+    # Remove the selected relations from the all relations list and continue with the next centroid
+
+    test_triples = list()
+    # Assign Remaining triples to test
+    for index, value in enumerate(relations):
+        if index in already_seen_indexes:
+            continue
+        test_triples.extend(get_triples_as_value(df.loc[df['relationship'] == value]))
+    # Save the train, test, dev to a txt file
+    df_train = pd.DataFrame(np.asarray(train_triples), columns = ['head','relationship','tail'])
+    df_val = pd.DataFrame(np.asarray(dev_triples), columns = ['head','relationship','tail'])
+    df_test = pd.DataFrame(np.asarray(test_triples), columns = ['head','relationship','tail'])
+    df_train.to_csv(f'train.csv', index=False)
+    df_test.to_csv(f'test.csv', index=False)
+    df_val.to_csv(f'validation.csv', index=False)
+    
+
+    logging.info("-----------------------------")
+    logging.info("UNIQUE RELATIONS")
+    logging.info(len(relations))
+    logging.info("CLUSTER RELATIONS")
+    logging.info(len(clustered_relation))
+    # logging.info some statistics for further use
+    logging.info("----------------------------")
+    logging.info(f"Number of Triples in Train = {df_train.shape[0]}")
+    logging.info(f"Number of Unique Entities(HEAD, TAIL) in Train = {len(np.unique(df_train[['head', 'tail']].values))}")
+    logging.info(f"Number of Unique Relationship in Train = {len(np.unique(df_train[['relationship']].values))}")
+    logging.info(f"Number of Triples in Validation = {df_val.shape[0]}")
+    logging.info(f"Number of Unique Entities(HEAD, TAIL) in Validation = {len(np.unique(df_val[['head', 'tail']].values))}")
+    logging.info(f"Number of Unique Relationship in Train = {len(np.unique(df_val[['relationship']].values))}")
+    logging.info(f"Number of Triples in Test = {df_test.shape[0]}")
+    logging.info(f"Number of Unique Entities(HEAD, TAIL) in Test = {len(np.unique(df_test[['head', 'tail']].values))}")
+    logging.info(f"Number of Unique Relationship in Train = {len(np.unique(df_test[['relationship']].values))}")
+    logging.info("----------------------------")
 
 def download_nell_dataset():
     base_url = "https://raw.githubusercontent.com/kkteru/grail/master/data/nell_{0}_ind/{1}.txt"
@@ -70,11 +167,15 @@ def get_data_frame(data_path, dataset_name="fb15k237"):
         # get a list of all the .txt files in the current directory
         txt_files = glob.glob(f'{data_path}/*.txt')
         dataframe = list()
+        print(data_path)
         # concatenate the contents of all the .txt files into a single string
         txt = 'head\trelationship\ttail\n'
         for i, file in enumerate(txt_files):
             df = pd.read_csv(file, sep='\t', names=['head', 'relationship', 'tail'])
+            print("PANDA FRAME")
+            print(df)
             dataframe.append(df)
+        print(dataframe)
         df = pd.concat([dataframe[0], dataframe[1], dataframe[2]], axis=0)
         # Run a fetch to get all the description for given relationship and store in a dict
         if dataset_name == "wikidata5m":
@@ -152,7 +253,7 @@ def fetch_wikidata_value_for_id(id):
         logging.info(f"Skipping relationship = {id} because no english description is available")
         return
 
-def get_triples_as_value(values, entity_to_id):
+def get_triples_as_value(values, entity_to_id=None):
     rows = list()
     for row in values.iterrows():
         head = row[1]['head']
@@ -170,8 +271,6 @@ def get_triples_as_value(values, entity_to_id):
         #     continue
         rows.append([head, row[1]['relationship'], tail])
     return rows
-
-
 
 def get_triples_from_cluster(cluster_frame, df, entity_to_id, output_dir):
     train_test_dev = [list(), list(), list()]
@@ -204,7 +303,7 @@ def get_triples_from_cluster(cluster_frame, df, entity_to_id, output_dir):
 
 def get_arg_parser():
     parser = argparse.ArgumentParser()
-    parser.add_argument('--data_path', type = str, default = '/home/barath/kg-super-engine/kg-super-engine/fb15k237', help = 'path to output directory')
+    parser.add_argument('--data_path', type = str, default = '/home/barath/codespace/kg-super/kg-super-engine/fb15k237', help = 'path to output directory')
     parser.add_argument('--data', type = str, default='fb15k237', help ='pykeen dataset name for entity and relationship id lookup')
     parser.add_argument('--output_dir', type = str, default='/home/barath/kg-super-engine/kg-super-engine/output/', help ='Number of processes')
     parser.add_argument('--cluster_type', type = str, default='tfidvectorizer', help ='Vectorizing Algorithm')
@@ -218,6 +317,14 @@ if __name__ == "__main__":
     df, dataset_entity_id = get_data_frame(args.data_path, args.data)
     if args.cluster_type == "tfidvectorizer":
         cluster_frame = tfid_cluster_relationship(df)
+    elif args.cluster_type == "radial_cluster":
+        radially_select_clusters(df)
     else:
         cluster_frame = sentence_embedding_cluster(df)
-    get_triples_from_cluster(cluster_frame, df, dataset_entity_id, args.output_dir)
+    # get_triples_from_cluster(cluster_frame, df, dataset_entity_id, args.output_dir)
+    # plt.figure(figsize=(10, 10))
+    # for i in range(len(cluster_frame)):
+    #     plt.scatter(cluster_frame[i, 0], cluster_frame[i, 1])
+    #     plt.annotate('sentence ' + str(i), (cluster_frame[i, 0], cluster_frame[i, 1]))
+    # plt.title('2D PCA projection of embedded sentences from BERT')
+    # plt.show()

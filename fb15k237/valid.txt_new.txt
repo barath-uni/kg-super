@@ -1,4 +1,3 @@
-head	relationship	tail
 /m/07pd_j	/film/film/genre	/m/02l7c8
 /m/06wxw	/location/location/time_zones	/m/02fqwt
 /m/01t94_1	/people/person/spouse_s./people/marriage/type_of_union	/m/04ztj
