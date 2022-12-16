@@ -7,7 +7,7 @@
 #SBATCH --cpus-per-task=3
 #SBATCH --time=47:59:59
 #SBATCH --mem=32000M
-#SBATCH --output=kgberttrainrandomcentroid.out
+#SBATCH --output=kgberttrainbaseline.out
 
 module purge
 module load 2021
