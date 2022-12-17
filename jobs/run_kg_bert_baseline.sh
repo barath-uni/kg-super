@@ -20,4 +20,4 @@ conda activate kg-super
 
 
 # Trigger the relation prediction from the parent folder kg-bert
-python3 /home/barath/kg-super-engine/kg-bert/kg-bert/run_bert_relation_prediction.py --task_name kg --do_train --do_eval --do_predict --data_dir /home/barath/kg-super-engine/kg-bert/kg-bert/data/FB15k-237/ --bert_model bert-base-cased --max_seq_length 25 --train_batch_size 32  --learning_rate 5e-5  --num_train_epochs 10.0  --output_dir /home/barath/kg-super-engine/kg-bert/kg-bert/output_fb15k237_baseline/   --gradient_accumulation_steps 1 --eval_batch_size 512
+python3 /home/barath/kg-super-engine/kg-bert/kg-bert/run_bert_relation_prediction.py --task_name kg --do_train --do_eval --do_predict --data_dir /home/barath/kg-super-engine/kg-bert/kg-bert/data/FB15k-237/ --bert_model bert-base-cased --max_seq_length 25 --train_batch_size 32  --learning_rate 5e-5  --num_train_epochs 20.0  --output_dir /home/barath/kg-super-engine/kg-bert/kg-bert/output_fb15k237_baseline/   --gradient_accumulation_steps 1 --eval_batch_size 512

@@ -2,11 +2,11 @@
 
 #SBATCH --partition=gpu_titanrtx_shared
 #SBATCH --gres=gpu:1
-#SBATCH --job-name=KGBertSentence
+#SBATCH --job-name=KGTFID
 #SBATCH --ntasks=1
 #SBATCH --cpus-per-task=3
 #SBATCH --time=47:59:59
-#SBATCH --mem=32000M
+#SBATCH --mem=128000M
 #SBATCH --output=kgberttraintfid.out
 
 module purge

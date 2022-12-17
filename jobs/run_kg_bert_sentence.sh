@@ -6,7 +6,7 @@
 #SBATCH --ntasks=1
 #SBATCH --cpus-per-task=3
 #SBATCH --time=47:59:59
-#SBATCH --mem=32000M
+#SBATCH --mem=128000M
 #SBATCH --output=kgberttrainsentence.out
 
 module purge
