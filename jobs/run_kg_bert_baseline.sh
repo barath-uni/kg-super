@@ -1,12 +1,12 @@
 #!/bin/bash
 
-#SBATCH --partition=gpu_titanrtx_shared
+#SBATCH --partition=gpu_titanrtx
 #SBATCH --gres=gpu:1
 #SBATCH --job-name=KGBertBaseline
 #SBATCH --ntasks=1
 #SBATCH --cpus-per-task=3
 #SBATCH --time=47:59:59
-#SBATCH --mem=64000M
+#SBATCH --mem=128000M
 #SBATCH --output=kgberttrainbaseline.out
 
 module purge
