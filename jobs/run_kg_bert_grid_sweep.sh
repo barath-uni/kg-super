@@ -5,7 +5,7 @@
 #SBATCH --job-name=KGBertGridSweep
 #SBATCH --ntasks=2
 #SBATCH --cpus-per-task=3
-#SBATCH --time=47:59:59
+#SBATCH --time=23:00:00
 #SBATCH --output=kgbertgridsweep.out
 
 module purge
