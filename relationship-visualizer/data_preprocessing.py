@@ -12,6 +12,7 @@ import argparse
 from sklearn.metrics import pairwise_distances
 from tqdm import tqdm 
 from sentence_transformers import SentenceTransformer
+from sklearn.decomposition import PCA
 import time
 import logging
 import matplotlib.pyplot as plt
@@ -22,7 +23,32 @@ transformers_logger.setLevel(logging.WARNING)
 
 embedder = SentenceTransformer('all-MiniLM-L6-v2')
 
-def radially_select_clusters(df):
+def plot_radial_cluster(df_train, df_test, df_dev):
+    relation_dev = df_dev['relationship'].unique()
+    relation_test = df_test['relationship'].unique()
+    relation_train = df_train['relationship'].unique()
+
+    vectorizer = TfidfVectorizer()
+    vectors_dev = vectorizer.fit_transform(relation_dev)
+    vectors_train = vectorizer.fit_transform(relation_train)
+    vectors_test = vectorizer.fit_transform(relation_test)
+
+    pca = PCA(2)
+    #Transform the data
+    df_train = pca.fit_transform(vectors_train.todense())
+    df_test = pca.fit_transform(vectors_test.todense())
+    df_dev = pca.fit_transform(vectors_dev.todense())
+
+    plt.scatter(df_train[:,0], df_train[:,1], label='train')
+    plt.scatter(df_dev[:,0], df_dev[:,1], label='dev')
+    plt.scatter(df_test[:,0], df_test[:,1], label='test')
+
+    plt.legend()
+    plt.title("Radial Cluster After TFID Vectorizer is applied")
+    plt.savefig('k-means-tfid.png')
+    plt.show()
+
+def radially_select_clusters(df, plot=True):
     relations = df['relationship'].unique()
     total_triples = df.shape[0]
     print(total_triples)
@@ -31,10 +57,25 @@ def radially_select_clusters(df):
     # Create a TfidfVectorizer and fit it to the sentences
     vectorizer = TfidfVectorizer()
     vectors = vectorizer.fit_transform(relations)
-
     # Use KMeans to find cluster centroids
     kmeans = KMeans(n_clusters=3)
     kmeans.fit(vectors)
+    if plot:
+        pca = PCA(2)
+        #Transform the data
+        df = pca.fit_transform(vectors.todense())
+        labels = kmeans.fit_predict(df)
+        centroids = kmeans.cluster_centers_
+        u_labels = np.unique(labels)
+        #plotting the results:
+        for i in u_labels:
+            plt.scatter(df[labels == i , 0] , df[labels == i , 1] , label = i)
+        plt.scatter(centroids[:,0] , centroids[:,1] , s = 80, color = 'k')
+        plt.legend()
+        plt.title("KMeans with TFID Vectorizer")
+        plt.savefig('k-means-tfid.png')
+        plt.show()
+        
     already_seen_indexes = list()
     clustered_relation = list()
     def select_triples(cluster_index,split_perc=0.8):

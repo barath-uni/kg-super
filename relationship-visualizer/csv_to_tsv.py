@@ -3,6 +3,11 @@
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
+
+from sklearn.cluster import KMeans
+from sklearn.feature_extraction.text import TfidfVectorizer
+from sklearn.decomposition import PCA
+
 centroid = "random_centroid_2"
 output_dir = f"/home/barath/codespace/kg-super/kg-super-engine/output/fb15k237/radial_cluster/{centroid}"
 train_csv = f"{output_dir}/train.csv"
@@ -22,9 +27,46 @@ print(f"Number of Triples in Validation = {df_dev.shape[0]}")
 print(f"Number of Unique Entities(HEAD, TAIL) in Validation = {len(np.unique(df_dev[['head', 'tail']].values))}")
 print(f"Number of Unique Relationship in Train = {len(np.unique(df_dev[['relationship']].values))}")
 print("----------------------------")
+
+
+print("------------------UNIQUE RELATIONS-----------------")
+print(f"---------{centroid}")
+print("TRAIN-----------")
+print(df['relationship'].unique())
+
+print("DEV-----------")
+print(df_dev['relationship'].unique())
+
+print("TEST-----------")
+print(df_test['relationship'].unique())
+
 # df.to_csv(f'{output_dir}/train.tsv', sep='\t', encoding='utf-8', index=False, header=None)
 # df_test.to_csv(f'{output_dir}/test.tsv', sep='\t', encoding='utf-8', index=False, header=None)
 # df_dev.to_csv(f'{output_dir}/dev.tsv', sep='\t', encoding='utf-8', index=False, header=None)
+def plot_radial_cluster(df_train, df_test, df_dev):
+    relation_dev = df_dev['relationship'].unique()
+    relation_test = df_test['relationship'].unique()
+    relation_train = df_train['relationship'].unique()
+
+    vectorizer = TfidfVectorizer()
+    vectors_dev = vectorizer.fit_transform(relation_dev)
+    vectors_train = vectorizer.fit_transform(relation_train)
+    vectors_test = vectorizer.fit_transform(relation_test)
+
+    pca = PCA(2)
+    #Transform the data
+    df_train = pca.fit_transform(vectors_train.todense())
+    df_test = pca.fit_transform(vectors_test.todense())
+    df_dev = pca.fit_transform(vectors_dev.todense())
+
+    plt.scatter(df_train[:,0], df_train[:,1], label='train')
+    plt.scatter(df_dev[:,0], df_dev[:,1], label='dev')
+    plt.scatter(df_test[:,0], df_test[:,1], label='test')
+
+    plt.legend()
+    plt.title("Radial Cluster After TFID Vectorizer is applied")
+    plt.savefig('k-means-tfid.png')
+    plt.show()
 
 def generate_entity_degree_plot(df):
     entity_head = set(df['head'].unique())
@@ -57,21 +99,23 @@ def generate_entity_degree_plot(df):
     return degree, number_of_entities
 
 
-degree_train, no_train = generate_entity_degree_plot(df)
-degree_dev, no_dev = generate_entity_degree_plot(df_dev)
+# degree_train, no_train = generate_entity_degree_plot(df)
+# degree_dev, no_dev = generate_entity_degree_plot(df_dev)
 
-degree_test, no_test = generate_entity_degree_plot(df_test)
-# Plot these points
+# degree_test, no_test = generate_entity_degree_plot(df_test)
+# # Plot these points
 
-fig, ax = plt.subplots()
-ax.scatter(degree_train, no_train, alpha=0.5, marker="s", label='Train')
-ax.scatter(degree_dev, no_dev, alpha=0.6, c='g', marker="d", label='Dev')
-ax.scatter(degree_test, no_test, alpha=0.6, c='r', marker="*", label='Test')
-ax.set_xlabel(r'Degree', fontsize=15)
-ax.set_ylabel(r'Number of entities', fontsize=15)
-ax.set_title('Degree vs Number of entities')
-ax.grid(True)
-plt.legend(loc='upper left')
-fig.tight_layout()
-plt.savefig(f'{centroid}.png', dpi=fig.dpi)
-plt.show()
+# fig, ax = plt.subplots()
+# ax.scatter(degree_train, no_train, alpha=0.5, marker="s", label='Train')
+# ax.scatter(degree_dev, no_dev, alpha=0.6, c='g', marker="d", label='Dev')
+# ax.scatter(degree_test, no_test, alpha=0.6, c='r', marker="*", label='Test')
+# ax.set_xlabel(r'Degree', fontsize=15)
+# ax.set_ylabel(r'Number of entities', fontsize=15)
+# ax.set_title('Degree vs Number of entities')
+# ax.grid(True)
+# plt.legend(loc='upper left')
+# fig.tight_layout()
+# plt.savefig(f'{centroid}.png', dpi=fig.dpi)
+# plt.show()
+
+# plot_radial_cluster(df, df_test, df_dev)
