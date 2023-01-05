@@ -55,7 +55,7 @@ sweep_configuration = {
      }
 }
 
-sweep_id = wandb.sweep(sweep=sweep_configuration, project="project-name")
+sweep_id = wandb.sweep(sweep=sweep_configuration, project="gridsweep")
 
 os.environ['CUDA_VISIBLE_DEVICES']= '0'
 #torch.backends.cudnn.deterministic = True
