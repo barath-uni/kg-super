@@ -319,6 +319,7 @@ def compute_metrics(task_name, preds, labels):
 
 
 def main():
+    wandb.init(project="gridsweep", entity="barath04")
     parser = argparse.ArgumentParser()
 
     ## Required parameters
