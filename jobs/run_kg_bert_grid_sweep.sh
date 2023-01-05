@@ -4,7 +4,6 @@
 #SBATCH --gpus-per-node=2
 #SBATCH --nodes=1
 #SBATCH --job-name=KGBertGridSweep
-#SBATCH --ntasks=2
 #SBATCH --cpus-per-task=3
 #SBATCH --time=23:00:00
 #SBATCH --output=kgbertgridsweep.out
