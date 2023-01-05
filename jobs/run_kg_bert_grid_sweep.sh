@@ -1,12 +1,11 @@
 #!/bin/bash
 
 #SBATCH --partition=gpu
-#SBATCH --gpus-per-node=1
+#SBATCH --gpus=2
 #SBATCH --job-name=KGBertGridSweep
-#SBATCH --ntasks=1
+#SBATCH --ntasks=2
 #SBATCH --cpus-per-task=3
 #SBATCH --time=47:59:59
-#SBATCH --mem=128000M
 #SBATCH --output=kgbertgridsweep.out
 
 module purge
