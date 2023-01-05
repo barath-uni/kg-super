@@ -1,7 +1,7 @@
 #!/bin/bash
 
-#SBATCH --partition=gpu_titanrtx_shared
-#SBATCH --gres=gpu:1
+#SBATCH --partition=gpu
+#SBATCH --gpus-per-node=1
 #SBATCH --job-name=Trainmetatitan
 #SBATCH --ntasks=1
 #SBATCH --cpus-per-task=3
