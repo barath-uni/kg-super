@@ -40,6 +40,22 @@ from pytorch_pretrained_bert.file_utils import PYTORCH_PRETRAINED_BERT_CACHE, WE
 from pytorch_pretrained_bert.modeling import BertForSequenceClassification, BertConfig
 from pytorch_pretrained_bert.tokenization import BertTokenizer
 from pytorch_pretrained_bert.optimization import BertAdam, WarmupLinearSchedule
+import wandb
+
+# Example sweep configuration
+sweep_configuration = {
+    'method': 'random',
+    'name': 'sweep',
+    'metric': {
+        'goal': 'maximize', 
+        'name': 'val_acc'
+		},
+    'parameters': {
+        'lr': {'max': 5e-2, 'min': 5e-6}
+     }
+}
+
+sweep_id = wandb.sweep(sweep=sweep_configuration, project="project-name")
 
 os.environ['CUDA_VISIBLE_DEVICES']= '0'
 #torch.backends.cudnn.deterministic = True
@@ -396,6 +412,7 @@ def main():
     parser.add_argument('--server_ip', type=str, default='', help="Can be used for distant debugging.")
     parser.add_argument('--server_port', type=str, default='', help="Can be used for distant debugging.")
     args = parser.parse_args()
+    args.learning_rate = wandb.config.lr
 
     if args.server_ip and args.server_port:
         # Distant debugging - see https://code.visualstudio.com/docs/python/debugging#_attach-to-a-local-script
@@ -802,6 +819,15 @@ def main():
         # relation prediction, raw
         print("Relation prediction hits@1, raw...")
         print(metrics.accuracy_score(all_label_ids, preds))
+        hits_at_1=metrics.accuracy_score(all_label_ids, preds)
+    wandb.log({
+        'epoch': args.num_train_epochs,
+        'train_loss':tr_loss,
+        'eval_loss':eval_loss,
+        'val_acc':hits_at_1
+    })
 
 if __name__ == "__main__":
-    main()
+    # Doing a grid sweep
+    wandb.agent(sweep_id, function=main, count=10)
+    # main()
