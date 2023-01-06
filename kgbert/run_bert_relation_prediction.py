@@ -319,7 +319,7 @@ def compute_metrics(task_name, preds, labels):
 
 
 def main():
-    wandb.init(project="gridsweep", entity="barath04")
+    run = wandb.init(project="gridsweep", entity="barath04")
     parser = argparse.ArgumentParser()
 
     ## Required parameters
@@ -459,8 +459,10 @@ def main():
     if not args.do_train and not args.do_eval:
         raise ValueError("At least one of `do_train` or `do_eval` must be True.")
 
+
     if os.path.exists(args.output_dir) and os.listdir(args.output_dir) and args.do_train:
-        raise ValueError("Output directory ({}) already exists and is not empty.".format(args.output_dir))
+        print("Not raising error because grid sweep will be run.")
+        #raise ValueError("Output directory ({}) already exists and is not empty.".format(args.output_dir))
     if not os.path.exists(args.output_dir):
         os.makedirs(args.output_dir)
 
