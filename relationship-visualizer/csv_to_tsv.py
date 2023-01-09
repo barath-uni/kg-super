@@ -40,9 +40,10 @@ print(df_dev['relationship'].unique())
 print("TEST-----------")
 print(df_test['relationship'].unique())
 
-# df.to_csv(f'{output_dir}/train.tsv', sep='\t', encoding='utf-8', index=False, header=None)
-# df_test.to_csv(f'{output_dir}/test.tsv', sep='\t', encoding='utf-8', index=False, header=None)
-# df_dev.to_csv(f'{output_dir}/dev.tsv', sep='\t', encoding='utf-8', index=False, header=None)
+df.to_csv(f'{output_dir}/train.tsv', sep='\t', encoding='utf-8', index=False, header=None)
+df_test.to_csv(f'{output_dir}/test.tsv', sep='\t', encoding='utf-8', index=False, header=None)
+df_dev.to_csv(f'{output_dir}/dev.tsv', sep='\t', encoding='utf-8', index=False, header=None)
+
 def plot_radial_cluster(df_train, df_test, df_dev):
     relation_dev = df_dev['relationship'].unique()
     relation_test = df_test['relationship'].unique()
