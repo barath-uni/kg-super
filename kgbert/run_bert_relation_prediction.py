@@ -366,7 +366,7 @@ def main():
 
 
     if os.path.exists(args.output_dir) and os.listdir(args.output_dir) and args.do_train:
-        print("Not raising error because grid sweep will be run.")
+        logger.info("Not raising error because grid sweep will be run.")
         #raise ValueError("Output directory ({}) already exists and is not empty.".format(args.output_dir))
     if not os.path.exists(args.output_dir):
         os.makedirs(args.output_dir)
@@ -391,7 +391,7 @@ def main():
     
     # Prepare model
     cache_dir = args.cache_dir if args.cache_dir else os.path.join(str(PYTORCH_PRETRAINED_BERT_CACHE), 'distributed_{}'.format(args.local_rank))
-    print(cache_dir)
+    logger.info(cache_dir)
     model = BertForSequenceClassification.from_pretrained(args.bert_model,
               cache_dir=cache_dir,
               num_labels=num_labels)
@@ -833,6 +833,6 @@ args = parser.parse_args()
 if __name__ == "__main__":
     
     # Doing a grid sweep
-    sweep_id = wandb.sweep(sweep=sweep_configuration, project=args.wandb_proj_name)
-    wandb.agent(sweep_id, function=main, count=10)
-    # main()
+    # sweep_id = wandb.sweep(sweep=sweep_configuration, project=args.wandb_proj_name)
+    # wandb.agent(sweep_id, function=main, count=10)
+    main()
