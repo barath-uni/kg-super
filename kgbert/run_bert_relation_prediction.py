@@ -317,8 +317,8 @@ def compute_metrics(task_name, preds, labels):
 
 
 def main():
-    run = wandb.init(project=args.wandb_proj_name, entity="barath04")
-    args.learning_rate = wandb.config.lr
+    # run = wandb.init(project=args.wandb_proj_name, entity="barath04")
+    # args.learning_rate = wandb.config.lr
 
     if args.server_ip and args.server_port:
         # Distant debugging - see https://code.visualstudio.com/docs/python/debugging#_attach-to-a-local-script
