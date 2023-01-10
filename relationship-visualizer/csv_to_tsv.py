@@ -8,8 +8,8 @@ from sklearn.cluster import KMeans
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.decomposition import PCA
 
-centroid = "random_centroid_2"
-output_dir = f"/home/barath/codespace/kg-super/kg-super-engine/output/fb15k237/radial_cluster/{centroid}"
+centroid = "random_centroid_0"
+output_dir = f"/home/barath/codespace/kg-super/kg-super-engine/output/fb15k237/radial_cluster_sentence/{centroid}"
 train_csv = f"{output_dir}/train.csv"
 test_csv = f"{output_dir}/test.csv"
 validation_csv = f"{output_dir}/validation.csv"

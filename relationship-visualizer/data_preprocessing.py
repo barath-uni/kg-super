@@ -48,18 +48,23 @@ def plot_radial_cluster(df_train, df_test, df_dev):
     plt.savefig('k-means-tfid.png')
     plt.show()
 
-def radially_select_clusters(df, plot=True):
+def radially_select_clusters(df, plot=False, sim_type="tfid"):
     relations = df['relationship'].unique()
     total_triples = df.shape[0]
     print(total_triples)
-    # This is a simple change to the usual K-means, where we randomly select a cluster and radially choose items
-    #  till 80% of triple is reached for train, 10% for test, 10% for validation
-    # Create a TfidfVectorizer and fit it to the sentences
-    vectorizer = TfidfVectorizer()
-    vectors = vectorizer.fit_transform(relations)
-    # Use KMeans to find cluster centroids
-    kmeans = KMeans(n_clusters=3)
-    kmeans.fit(vectors)
+    if sim_type=="tfid":
+        # This is a simple change to the usual K-means, where we randomly select a cluster and radially choose items
+        #  till 80% of triple is reached for train, 10% for test, 10% for validation
+        # Create a TfidfVectorizer and fit it to the sentences
+        vectorizer = TfidfVectorizer()
+        vectors = vectorizer.fit_transform(relations)
+        # Use KMeans to find cluster centroids
+        kmeans = KMeans(n_clusters=3)
+        kmeans.fit(vectors)
+    else:
+        print("SENTENCE EMBED")
+        vectors, kmeans = build_sentence_vectors(df)
+
     if plot:
         pca = PCA(2)
         #Transform the data
@@ -78,6 +83,7 @@ def radially_select_clusters(df, plot=True):
         
     already_seen_indexes = list()
     clustered_relation = list()
+
     def select_triples(cluster_index,split_perc=0.8):
         # Select a cluster centroid at random
         cluster_centroid = kmeans.cluster_centers_[cluster_index]
@@ -118,10 +124,10 @@ def radially_select_clusters(df, plot=True):
         already_seen_indexes.extend(selection_index)
         return triples_list
     
-    train_triples = select_triples(2)
+    train_triples = select_triples(1)
     # Remove the selected relations from the all relations list and continue with the next centroid
 
-    dev_triples = select_triples(0, 0.1)
+    dev_triples = select_triples(2, 0.1)
     # Remove the selected relations from the all relations list and continue with the next centroid
 
     test_triples = list()
@@ -151,10 +157,10 @@ def radially_select_clusters(df, plot=True):
     logging.info(f"Number of Unique Relationship in Train = {len(np.unique(df_train[['relationship']].values))}")
     logging.info(f"Number of Triples in Validation = {df_val.shape[0]}")
     logging.info(f"Number of Unique Entities(HEAD, TAIL) in Validation = {len(np.unique(df_val[['head', 'tail']].values))}")
-    logging.info(f"Number of Unique Relationship in Train = {len(np.unique(df_val[['relationship']].values))}")
+    logging.info(f"Number of Unique Relationship in Test = {len(np.unique(df_val[['relationship']].values))}")
     logging.info(f"Number of Triples in Test = {df_test.shape[0]}")
     logging.info(f"Number of Unique Entities(HEAD, TAIL) in Test = {len(np.unique(df_test[['head', 'tail']].values))}")
-    logging.info(f"Number of Unique Relationship in Train = {len(np.unique(df_test[['relationship']].values))}")
+    logging.info(f"Number of Unique Relationship in Test = {len(np.unique(df_test[['relationship']].values))}")
     logging.info("----------------------------")
 
 def download_nell_dataset():
@@ -237,6 +243,12 @@ def get_data_frame(data_path, dataset_name="fb15k237"):
         entity_to_id = ""
     return df, entity_to_id
 
+def build_sentence_vectors(df):
+    values = df['relationship'].unique()
+    corpus_embeddings = embedder.encode(values)
+    clustering_model = KMeans(n_clusters=3)
+    clustering_model.fit(corpus_embeddings)
+    return corpus_embeddings, clustering_model
 
 def sentence_embedding_cluster(df):
     values = df['relationship'].unique()
@@ -359,7 +371,7 @@ if __name__ == "__main__":
     if args.cluster_type == "tfidvectorizer":
         cluster_frame = tfid_cluster_relationship(df)
     elif args.cluster_type == "radial_cluster":
-        radially_select_clusters(df)
+        radially_select_clusters(df, sim_type="sentence")
     else:
         cluster_frame = sentence_embedding_cluster(df)
     # get_triples_from_cluster(cluster_frame, df, dataset_entity_id, args.output_dir)
