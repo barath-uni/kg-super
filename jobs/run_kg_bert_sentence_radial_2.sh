@@ -20,7 +20,7 @@ conda activate kg-super
 # Copy the files to a local folder that can be used later
 cp -r /home/barath/kg-super-engine/kg-bert/kg-bert/data/FB15k-237/* /home/barath/kg-super-engine/kg-bert-sentece-random-centroid_2/
 
-cp -r /home/barath/kg-super-engine/kg-super-engine/output/fb15k237/radial_cluster_sentence/random_centroid_2/*.tsv /home/barath/kg-super-engine/kg-bert-random-centroid_2/
+cp -r /home/barath/kg-super-engine/kg-super-engine/output/fb15k237/radial_cluster_sentence/random_centroid_2/*.tsv /home/barath/kg-super-engine/kg-bert-sentece-random-centroid_2/
 
 # Trigger the relation prediction from the parent folder kg-bert
 
