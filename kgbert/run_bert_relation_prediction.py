@@ -689,6 +689,8 @@ def main():
                 tmp_triple = [test_triple[0], tmp_label, test_triple[2]]
                 #print(tmp_triple)
                 tmp_triple_str = '\t'.join(tmp_triple)
+                print("************* PREDICTED TRIPLE ***********")
+                print(tmp_triple_str)
                 if tmp_triple_str in all_triples_str_set:
                     filter_rank -= 1
             filter_ranks.append(filter_rank + 1)
@@ -728,12 +730,12 @@ def main():
         print("Relation prediction hits@1, raw...")
         print(metrics.accuracy_score(all_label_ids, preds))
         hits_at_1=metrics.accuracy_score(all_label_ids, preds)
-    wandb.log({
-        'epoch': args.num_train_epochs,
-        'train_loss':tr_loss,
-        'eval_loss':eval_loss,
-        'val_acc':hits_at_1
-    })
+    # wandb.log({
+    #     'epoch': args.num_train_epochs,
+    #     'train_loss':tr_loss,
+    #     'eval_loss':eval_loss,
+    #     'val_acc':hits_at_1
+    # })
 
 parser = argparse.ArgumentParser()
 
