@@ -670,41 +670,43 @@ def main():
         filter_ranks = []
         hits = []
         hits_filter = []
+        predicted_triples = os.path.join(args.output_dir, "predicted_triples.txt")
+
         for i in range(10):
             hits.append([])
             hits_filter.append([])
+        with open(predicted_triples, "a+") as pred_write:
+            for i, pred in enumerate(preds):
+                rel_values = torch.tensor(pred)
+                _, argsort1 = torch.sort(rel_values, descending=True)
+                argsort1 = argsort1.cpu().numpy()
+                
+                rank = np.where(argsort1 == all_label_ids[i])[0][0]
+                #print(argsort1, all_label_ids[i], rank)
+                ranks.append(rank + 1)
+                test_triple = test_triples[i]
+                filter_rank = rank
+                for tmp_label_id in argsort1[:rank]:
+                    tmp_label = label_list[tmp_label_id]
+                    tmp_triple = [test_triple[0], tmp_label, test_triple[2]]
+                    #print(tmp_triple)
+                    tmp_triple_str = '\t'.join(tmp_triple)
+                    print("************* PREDICTED TRIPLE ***********")
+                    pred_write.write(tmp_triple_str)
+                    if tmp_triple_str in all_triples_str_set:
+                        filter_rank -= 1
+                filter_ranks.append(filter_rank + 1)
 
-        for i, pred in enumerate(preds):
-            rel_values = torch.tensor(pred)
-            _, argsort1 = torch.sort(rel_values, descending=True)
-            argsort1 = argsort1.cpu().numpy()
-            
-            rank = np.where(argsort1 == all_label_ids[i])[0][0]
-            #print(argsort1, all_label_ids[i], rank)
-            ranks.append(rank + 1)
-            test_triple = test_triples[i]
-            filter_rank = rank
-            for tmp_label_id in argsort1[:rank]:
-                tmp_label = label_list[tmp_label_id]
-                tmp_triple = [test_triple[0], tmp_label, test_triple[2]]
-                #print(tmp_triple)
-                tmp_triple_str = '\t'.join(tmp_triple)
-                print("************* PREDICTED TRIPLE ***********")
-                print(tmp_triple_str)
-                if tmp_triple_str in all_triples_str_set:
-                    filter_rank -= 1
-            filter_ranks.append(filter_rank + 1)
+                for hits_level in range(10):
+                    if rank <= hits_level:
+                        hits[hits_level].append(1.0)
+                    else:
+                        hits[hits_level].append(0.0)
 
-            for hits_level in range(10):
-                if rank <= hits_level:
-                    hits[hits_level].append(1.0)
-                else:
-                    hits[hits_level].append(0.0)
-
-                if filter_rank <= hits_level:
-                    hits_filter[hits_level].append(1.0)
-                else:
-                    hits_filter[hits_level].append(0.0)   
+                    if filter_rank <= hits_level:
+                        hits_filter[hits_level].append(1.0)
+                    else:
+                        hits_filter[hits_level].append(0.0)   
 
         print("Raw mean rank: ", np.mean(ranks))
         print("Filtered mean rank: ", np.mean(filter_ranks))
