@@ -690,7 +690,7 @@ def main():
                     tmp_label = label_list[tmp_label_id]
                     tmp_triple = [test_triple[0], tmp_label, test_triple[2]]
                     #print(tmp_triple)
-                    tmp_triple_str = '\t'.join(tmp_triple)
+                    tmp_triple_str = '\t'.join(tmp_triple)+"\n"
                     print("************* PREDICTED TRIPLE ***********")
                     pred_write.write(tmp_triple_str)
                     if tmp_triple_str in all_triples_str_set:
