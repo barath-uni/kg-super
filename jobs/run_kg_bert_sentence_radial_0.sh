@@ -3,10 +3,10 @@
 #SBATCH --partition=gpu
 #SBATCH --gpus-per-node=2
 #SBATCH --nodes=1
-#SBATCH --job-name=KGBertSentenceRadial
+#SBATCH --job-name=KGBERTQual
 #SBATCH --cpus-per-task=3
-#SBATCH --time=23:00:00
-#SBATCH --output=kgbertgridssentence.out
+#SBATCH --time=1:00:00
+#SBATCH --output=kgbertqual.out
 
 module purge
 module load 2021
