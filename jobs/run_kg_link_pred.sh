@@ -1,13 +1,12 @@
 #!/bin/bash
 
 #SBATCH --partition=gpu
-#SBATCH --gpus-per-node=1
-#SBATCH --job-name=KGLinkBaseline
-#SBATCH --ntasks=1
+#SBATCH --gpus-per-node=2
+#SBATCH --nodes=1
+#SBATCH --job-name=KGLinkPred
 #SBATCH --cpus-per-task=3
-#SBATCH --time=11:59:59
-#SBATCH --mem=128000M
-#SBATCH --output=kgbertlinkpredbaseline.out
+#SBATCH --time=23:00:00
+#SBATCH --output=kglinkpred.out
 
 module purge
 module load 2021
