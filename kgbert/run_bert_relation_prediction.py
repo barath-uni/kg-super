@@ -732,12 +732,6 @@ def main():
         print("Relation prediction hits@1, raw...")
         print(metrics.accuracy_score(all_label_ids, preds))
         hits_at_1=metrics.accuracy_score(all_label_ids, preds)
-    # wandb.log({
-    #     'epoch': args.num_train_epochs,
-    #     'train_loss':tr_loss,
-    #     'eval_loss':eval_loss,
-    #     'val_acc':hits_at_1
-    # })
 
 parser = argparse.ArgumentParser()
 

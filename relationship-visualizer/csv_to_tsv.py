@@ -8,8 +8,8 @@ from sklearn.cluster import KMeans
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.decomposition import PCA
 
-centroid = "random_centroid_0"
-output_dir = f"/home/barath/codespace/kg-super/kg-super-engine/output/fb15k237/radial_cluster/{centroid}"
+centroid = "random_centroid_2"
+output_dir = f"/home/barath/codespace/kg-super/kg-super-engine/output/fb15k237/radial_cluster_sentence/{centroid}"
 train_csv = f"{output_dir}/train.csv"
 test_csv = f"{output_dir}/test.csv"
 validation_csv = f"{output_dir}/validation.csv"
@@ -43,6 +43,14 @@ print(df_test['relationship'].unique())
 # df.to_csv(f'{output_dir}/train.tsv', sep='\t', encoding='utf-8', index=False, header=None)
 # df_test.to_csv(f'{output_dir}/test.tsv', sep='\t', encoding='utf-8', index=False, header=None)
 # df_dev.to_csv(f'{output_dir}/dev.tsv', sep='\t', encoding='utf-8', index=False, header=None)
+
+def generate_stats(df_train, df_test, df_dev):
+    to_add = list()
+    for value in df_train['relationship'].unique():
+        if df_test.loc[df_test['relationship']==value] or df_dev.loc[df_dev['relationship']==value]:
+            continue
+        to_add.append(value)
+    return to_add
 
 def plot_radial_cluster(df_train, df_test, df_dev):
     relation_dev = df_dev['relationship'].unique()
@@ -98,7 +106,9 @@ def generate_entity_degree_plot(df):
         number_of_entities.append(math.log10(len(degree_entity_dict[key])))
     return degree, number_of_entities
 
+# to_add = generate_stats(df, df_test, df_dev)
 
+print(" ********************* UNIQUE RELATIONSHIP IN TRAIN BUT NOT IN DEV/")
 degree_train, no_train = generate_entity_degree_plot(df)
 degree_dev, no_dev = generate_entity_degree_plot(df_dev)
 
@@ -118,4 +128,4 @@ fig.tight_layout()
 plt.savefig(f'{centroid}.png', dpi=fig.dpi)
 plt.show()
 
-# plot_radial_cluster(df, df_test, df_dev)
+plot_radial_cluster(df, df_test, df_dev)

@@ -124,10 +124,10 @@ def radially_select_clusters(df, plot=False, sim_type="tfid"):
         already_seen_indexes.extend(selection_index)
         return triples_list
     
-    train_triples = select_triples(1)
+    train_triples = select_triples(0)
     # Remove the selected relations from the all relations list and continue with the next centroid
 
-    dev_triples = select_triples(2, 0.1)
+    dev_triples = select_triples(1, 0.1)
     # Remove the selected relations from the all relations list and continue with the next centroid
 
     test_triples = list()
@@ -371,7 +371,7 @@ if __name__ == "__main__":
     if args.cluster_type == "tfidvectorizer":
         cluster_frame = tfid_cluster_relationship(df)
     elif args.cluster_type == "radial_cluster":
-        radially_select_clusters(df, sim_type="sentence")
+        radially_select_clusters(df, sim_type="tfid")
     else:
         cluster_frame = sentence_embedding_cluster(df)
     # get_triples_from_cluster(cluster_frame, df, dataset_entity_id, args.output_dir)
