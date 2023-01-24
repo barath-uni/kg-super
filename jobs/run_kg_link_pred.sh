@@ -5,7 +5,7 @@
 #SBATCH --nodes=1
 #SBATCH --job-name=KGLinkPredEval
 #SBATCH --cpus-per-task=3
-#SBATCH --time=3:00:00
+#SBATCH --time=23:00:00
 #SBATCH --output=kglinkpredeval.out
 
 module purge
