@@ -1023,11 +1023,11 @@ def main():
                 top_ten_hit_count += 1
             print("hit@10 until now: ", top_ten_hit_count * 1.0 / len(ranks))
 
-            file_prefix = str(args.data_dir[7:]) + "_" + str(args.train_batch_size) + "_" + str(args.learning_rate) + "_" + str(args.max_seq_length) + "_" + str(args.num_train_epochs)
-            #file_prefix = str(args.data_dir[7:])
-            f = open(file_prefix + '_ranks.txt','a')
-            f.write(str(rank1) + '\t' + str(rank2) + '\n')
-            f.close()
+            # file_prefix = str(args.data_dir[7:]) + "_" + str(args.train_batch_size) + "_" + str(args.learning_rate) + "_" + str(args.max_seq_length) + "_" + str(args.num_train_epochs)
+            # #file_prefix = str(args.data_dir[7:])
+            # f = open(file_prefix + '_ranks.txt','a')
+            # f.write(str(rank1) + '\t' + str(rank2) + '\n')
+            # f.close()
             # this could be done more elegantly, but here you go
             for hits_level in range(10):
                 if rank1 <= hits_level:
