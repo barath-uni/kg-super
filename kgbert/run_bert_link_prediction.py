@@ -902,7 +902,8 @@ def main():
                     hits_right[hits_level].append(0.0)
     
         '''
-        for test_triple in test_triples:
+        for test_triple in test_triples[:100]:
+            print("TESTING TRIPLE")
             head = test_triple[0]
             relation = test_triple[1]
             tail = test_triple[2]
