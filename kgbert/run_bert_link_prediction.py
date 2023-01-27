@@ -902,6 +902,10 @@ def main():
                     hits_right[hits_level].append(0.0)
     
         '''
+
+        print(" ******** STARTING TESTING *********** ")
+        print(f" Num of test triples = {len(test_triples)}")
+
         for test_triple in test_triples:
             print("TESTING TRIPLE")
             head = test_triple[0]
@@ -919,6 +923,7 @@ def main():
                         head_corrupt_list.append(tmp_triple)
 
             tmp_examples = processor._create_examples(head_corrupt_list, "test", args.data_dir)
+            print(" ****** Length of Tmp Examples ***********")
             print(len(tmp_examples))
             tmp_features = convert_examples_to_features(tmp_examples, label_list, args.max_seq_length, tokenizer, print_info = False)
             all_input_ids = torch.tensor([f.input_ids for f in tmp_features], dtype=torch.long)
@@ -978,7 +983,8 @@ def main():
                         tail_corrupt_list.append(tmp_triple)
 
             tmp_examples = processor._create_examples(tail_corrupt_list, "test", args.data_dir)
-            #print(len(tmp_examples))
+            print("LENGTH OF TRIPLES USED FOR TESTING")
+            print(len(tmp_examples))
             tmp_features = convert_examples_to_features(tmp_examples, label_list, args.max_seq_length, tokenizer, print_info = False)
             all_input_ids = torch.tensor([f.input_ids for f in tmp_features], dtype=torch.long)
             all_input_mask = torch.tensor([f.input_mask for f in tmp_features], dtype=torch.long)
