@@ -19,3 +19,7 @@ dependencies:
     - ujson==5.6.0
     - sentence-transformers==2.2.2
     - pytorch-pretrained-bert>=0.6.2
+    - networkx==2.4
+    - dgl==0.4.2
+    - lmdb==0.98
+    - scikit-learn==0.22.1
