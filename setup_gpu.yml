@@ -1,4 +1,4 @@
-name: kg-super
+name: kg-super-rmpi
 channels:
   - pytorch
   - conda-forge
