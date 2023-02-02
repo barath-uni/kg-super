@@ -4,7 +4,7 @@ channels:
   - conda-forge
   - defaults
 dependencies:
-  - python=3.9.7
+  - python=3.8.3
   - pip=21.2.4
   - cudatoolkit=11.3.1
   - pytorch=1.10.0
@@ -20,6 +20,6 @@ dependencies:
     - sentence-transformers==2.2.2
     - pytorch-pretrained-bert>=0.6.2
     - networkx==2.4
-    - dgl==0.4.2
+    - dgl==0.9.1
     - lmdb==0.98
     - scikit-learn==0.22.1
