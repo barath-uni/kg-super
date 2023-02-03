@@ -220,9 +220,10 @@ class GraphClassifier(nn.Module):
             self.h1[eid] = self.h1[eid] + h_0_N[i]
 
 
-        rel_edge_ids = [id for id in en_g.edge_id(head_ids[i], tail_ids[i], return_array=True) for i in range(head_ids.shape[0])]
-
-        self.h1_extracted = self.h1[rel_edge_ids]
+        rel_edge_ids = [en_g.edge_id(head_ids[i], tail_ids[i], return_array=True) for i in range(head_ids.shape[0])]
+        print("REL EDGE IDs")
+        print(rel_edge_ids)
+        self.h1_extracted = self.h1[rel_edge_ids[0]]
         self.rel_edge_ids = rel_edge_ids
         self.rel_edge_ids = rel_edge_ids
         h_1_N = self.rel_aggr(en_g, head_node, tail_node, num_nodes, num_edges, aggr_flag=1, is_drop=True)
