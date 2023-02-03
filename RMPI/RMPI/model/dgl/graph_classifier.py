@@ -2,6 +2,8 @@ import torch.nn as nn
 import torch
 import torch.nn.functional as F
 import numpy as np
+import logging
+logging.basicConfig(level=logging.INFO)
 
 
 
@@ -258,7 +260,10 @@ class GraphClassifier(nn.Module):
 
 
         output = self.fc_layer(g_rep)
-        return output
+
+        logging.info("****************** BEFORE THE GRAPH CLASSIFIER FORWARD IS RETURNED ****************")
+        logging.info(output.squeeze(1))
+        return output.squeeze(1)
 
     @staticmethod
     def sparse_dense_mul(s, d):
