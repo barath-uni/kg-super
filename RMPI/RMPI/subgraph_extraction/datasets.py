@@ -131,11 +131,15 @@ class SubgraphDataset(Dataset):
         return self.num_graphs_pos
 
     def _prepare_subgraphs(self, nodes, r_label, n_labels):
+        print("PRINTING THE NODES")
+        print(nodes)
         subgraph = dgl.DGLGraph(self.graph.subgraph(nodes))
+        print("PRINTING THE SUBGRAPH")
+        print(subgraph)
         subgraph.edata['type'] = self.graph.edata['type'][self.graph.subgraph(nodes).parent_eid]
         subgraph.edata['label'] = torch.tensor(r_label * np.ones(subgraph.edata['type'].shape), dtype=torch.long)
 
-        edges_btw_roots = subgraph.edge_id(0, 1)
+        edges_btw_roots = subgraph.edge_id(0, 1, return_array= True)
         rel_link = np.nonzero(subgraph.edata['type'][edges_btw_roots] == r_label)
 
         if rel_link.squeeze().nelement() == 0:
