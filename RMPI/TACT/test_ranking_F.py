@@ -356,7 +356,7 @@ def get_subgraphs(all_links, adj_list, dgl_adj_list, max_node_label_value):
         subgraph.edata['type'] = dgl_adj_list.edata['type'][dgl_adj_list.subgraph(nodes).parent_eid]
         subgraph.edata['label'] = torch.tensor(rel * np.ones(subgraph.edata['type'].shape), dtype=torch.long)
 
-        edges_btw_roots = subgraph.edge_id(0, 1, return_array=True)
+        edges_btw_roots = subgraph.edge_id(0, 1)
         rel_link = np.nonzero(subgraph.edata['type'][edges_btw_roots] == rel)
 
         if rel_link.squeeze().nelement() == 0:
