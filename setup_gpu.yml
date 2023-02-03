@@ -20,7 +20,7 @@ dependencies:
     - sentence-transformers==2.2.2
     - pytorch-pretrained-bert>=0.6.2
     - networkx==2.4
-    - dgl==0.4.3
+    - dgl==0.4.2
     - lmdb==0.98
     - matplotlib
     - scikit-learn==0.22.1
