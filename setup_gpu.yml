@@ -15,7 +15,7 @@ dependencies:
     - tabulate==0.8.9
     - tqdm==4.62.3
     - pillow==8.0.1
-    - pykeen==1.9.0
+    - pykeen==1.8.1
     - ujson==5.6.0
     - sentence-transformers==2.2.2
     - pytorch-pretrained-bert>=0.6.2

@@ -16,6 +16,6 @@ module load Anaconda3/2021.05
 # /home/barath/blogwriter/AutoBlogWriter
 cd $HOME/kg-super-engine/kg-super-engine/RMPI
 eval "$(conda shell.bash hook)"
-conda activate kg-super-rmpi
+conda activate kg-rmpi
 
 python TACT/train.py -d nell_v2 -e nell_v2_TACT_base --ablation 3
