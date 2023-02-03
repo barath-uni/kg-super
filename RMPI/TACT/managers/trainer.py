@@ -58,7 +58,7 @@ class Trainer():
             score_pos = self.graph_classifier(data_pos)
             score_neg = self.graph_classifier(data_neg)
 
-            loss = self.criterion(score_pos, score_neg.view(len(score_pos), -1).mean(dim=1), torch.Tensor([1]).to(device=self.params.device))
+            loss = self.criterion(score_pos.squeeze(), score_neg.view(len(score_pos), -1).mean(dim=1), torch.Tensor([1]).to(device=self.params.device))
             # print(score_pos, score_neg, loss)
             loss.backward()
             self.optimizer.step()
