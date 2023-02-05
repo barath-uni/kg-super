@@ -5,7 +5,7 @@
 #SBATCH --nodes=1
 #SBATCH --cpus-per-task=18
 #SBATCH --job-name=RMPILinkPredTrain
-#SBATCH --time=03:00:00
+#SBATCH --time=12:00:00
 #SBATCH --mem=60G
 #SBATCH --output=rmpilinktrain.out
 
@@ -18,4 +18,9 @@ cd $HOME/kg-super-engine/kg-super-engine/RMPI
 eval "$(conda shell.bash hook)"
 conda activate kg-rmpi2
 
-python TACT/train.py -d nell_v2 -e nell_v2_TACT_base --ablation 3
+# python TACT/train.py -d nell_v2 -e nell_v2_TACT_base --ablation 3
+python RMPI/train.py -d nell_v2 -e nell_v2_RMPI_base --ablation 0
+
+python RMPI/test_ranking_F.py -d nell_v2_ind_v3_semi -e nell_v2_RMPI_base --ablation 0
+
+python RMPI/test_ranking_P.py -d nell_v2_ind -e nell_v2_RMPI_base --ablation 0
