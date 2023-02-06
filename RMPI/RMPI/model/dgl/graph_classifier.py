@@ -262,8 +262,8 @@ class GraphClassifier(nn.Module):
         output = self.fc_layer(g_rep)
 
         print("****************** BEFORE THE GRAPH CLASSIFIER FORWARD IS RETURNED ****************")
-        print(output)
-        return output
+        print(output.squeeze(1))
+        return output.squeeze(1)
 
     @staticmethod
     def sparse_dense_mul(s, d):
