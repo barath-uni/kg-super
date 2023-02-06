@@ -32,8 +32,8 @@ class Evaluator():
                 print(score_pos)
                 score_neg = self.graph_classifier(data_neg)
 
-                pos_scores += score_pos.squeeze(1).detach().cpu().tolist()
-                neg_scores += score_neg.squeeze(1).detach().cpu().tolist()
+                pos_scores += score_pos.detach().cpu().tolist()
+                neg_scores += score_neg.detach().cpu().tolist()
                 pos_labels += targets_pos.tolist()
                 neg_labels += targets_neg.tolist()
 
