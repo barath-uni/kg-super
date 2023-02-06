@@ -584,7 +584,8 @@ if __name__ == '__main__':
         'graph': os.path.join('../data', params.dataset, 'train.txt'),
         'links': os.path.join('../data', params.dataset, params.test_file+'.txt')
     }
-
+    
+    print(os.path.dirname(os.path.realpath(__file__)))
     params.model_path = os.path.join('expri_save_models', params.expri_name, 'best_graph_classifier.pth')
 
 
