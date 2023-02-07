@@ -551,8 +551,8 @@ if __name__ == '__main__':
     
     base_path = os.path.dirname(os.path.realpath(__file__))
     params.file_paths = {
-        'graph': os.path.join('RMPI/data', params.dataset, 'train.txt'),
-        'links': os.path.join('RMPI/data', params.dataset, 'test.txt')
+        'graph': os.path.join('/gpfs/home5/barath/kg-super-engine/kg-super-engine/RMPI/data', params.dataset, 'train.txt'),
+        'links': os.path.join('/gpfs/home5/barath/kg-super-engine/kg-super-engine/RMPI/data', params.dataset, 'test.txt')
     }
     
     params.model_path = os.path.join(base_path, 'expri_save_models', params.expri_name, 'best_graph_classifier.pth')
