@@ -548,13 +548,13 @@ if __name__ == '__main__':
     parser.add_argument("--runs", type=int, default=5, help="How many runs to perform for mean and std?")
 
     params = parser.parse_args()
-
-    params.file_paths = {
-        'graph': os.path.join('../data', params.dataset, 'train.txt'),
-        'links': os.path.join('../data', params.dataset, 'test.txt')
-    }
     
     base_path = os.path.dirname(os.path.realpath(__file__))
+    params.file_paths = {
+        'graph': os.path.join('RMPI/data', params.dataset, 'train.txt'),
+        'links': os.path.join('RMPI/data', params.dataset, 'test.txt')
+    }
+    
     params.model_path = os.path.join(base_path, 'expri_save_models', params.expri_name, 'best_graph_classifier.pth')
     
     print('============ Params ============')

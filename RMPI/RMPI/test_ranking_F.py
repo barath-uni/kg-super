@@ -581,8 +581,8 @@ if __name__ == '__main__':
     params = parser.parse_args()
 
     params.file_paths = {
-        'graph': os.path.join('../data', params.dataset, 'train.txt'),
-        'links': os.path.join('../data', params.dataset, params.test_file+'.txt')
+        'graph': os.path.join('RMPI/data', params.dataset, 'train.txt'),
+        'links': os.path.join('RMPI/data', params.dataset, params.test_file+'.txt')
     }
     
     base_path = os.path.dirname(os.path.realpath(__file__))
