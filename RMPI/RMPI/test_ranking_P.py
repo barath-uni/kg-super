@@ -452,12 +452,12 @@ def get_rank(neg_links):
 
 def save_negative_triples_to_file(neg_triplets, id2entity, id2relation):
 
-    with open(os.path.join('../data', params.dataset, 'ranking_head.txt'), "w") as f:
+    with open(os.path.join('/gpfs/home5/barath/kg-super-engine/kg-super-engine/RMPI/data', params.dataset, 'ranking_head.txt'), "w") as f:
         for neg_triplet in neg_triplets:
             for s, o, r in neg_triplet['head'][0]:
                 f.write('\t'.join([id2entity[s], id2relation[r], id2entity[o]]) + '\n')
 
-    with open(os.path.join('../data', params.dataset, 'ranking_tail.txt'), "w") as f:
+    with open(os.path.join('/gpfs/home5/barath/kg-super-engine/kg-super-engine/RMPI/data', params.dataset, 'ranking_tail.txt'), "w") as f:
         for neg_triplet in neg_triplets:
             for s, o, r in neg_triplet['tail'][0]:
                 f.write('\t'.join([id2entity[s], id2relation[r], id2entity[o]]) + '\n')
