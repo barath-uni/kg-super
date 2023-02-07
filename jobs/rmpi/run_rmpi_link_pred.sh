@@ -7,7 +7,7 @@
 #SBATCH --job-name=RMPILinkPredTrain
 #SBATCH --time=06:00:00
 #SBATCH --mem=60G
-#SBATCH --output=rmpilinktrain.out
+#SBATCH --output=rmpilinkpartial.out
 
 module purge
 module load 2021
@@ -21,6 +21,8 @@ conda activate kg-rmpi2
 # python TACT/train.py -d nell_v2 -e nell_v2_TACT_base --ablation 3
 # python RMPI/train.py -d nell_v2 -e nell_v2_RMPI_base --ablation 0
 
-python RMPI/test_ranking_F.py -d nell_v2_ind_v3_semi -e nell_v2_RMPI_base --ablation 0
+# python RMPI/test_ranking_F.py -d nell_v2_ind_v3_semi -e nell_v2_RMPI_base --ablation 0
+
+echo "***** STARTING TEST RANKING Partial ************** "
 
 python RMPI/test_ranking_P.py -d nell_v2_ind -e nell_v2_RMPI_base --ablation 0

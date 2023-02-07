@@ -430,7 +430,7 @@ def get_rank(neg_links):
 
     if head_target_id != 10000:
         data = get_subgraphs(head_neg_links, adj_list_, dgl_adj_list_, params.max_label_value)
-        head_scores = model_(data).squeeze(1).detach().numpy()
+        head_scores = model_(data).detach().numpy()
         head_rank = np.argwhere(np.argsort(head_scores)[::-1] == head_target_id) + 1
     else:
         head_scores = np.array([])
@@ -441,7 +441,7 @@ def get_rank(neg_links):
 
     if tail_target_id != 10000:
         data = get_subgraphs(tail_neg_links, adj_list_, dgl_adj_list_, params.max_label_value)
-        tail_scores = model_(data).squeeze(1).detach().numpy()
+        tail_scores = model_(data).detach().numpy()
         tail_rank = np.argwhere(np.argsort(tail_scores)[::-1] == tail_target_id) + 1
     else:
         tail_scores = np.array([])
@@ -476,6 +476,7 @@ def main(params):
 
     all_mrr = []
     all_hit1 = []
+    all_hit3 = []
     all_hit5 = []
     all_hit10 = []
     for r in range(1, params.runs + 1):
@@ -497,9 +498,11 @@ def main(params):
                 all_tail_scores += tail_scores.tolist()
 
         isHit1List = [x for x in ranks if x <= 1]
+        isHit3List = [x for x in ranks if x <= 3]
         isHit5List = [x for x in ranks if x <= 5]
         isHit10List = [x for x in ranks if x <= 10]
         hits_1 = len(isHit1List) / len(ranks)
+        hits_3 = len(isHit3List) / len(ranks)
         hits_5 = len(isHit5List) / len(ranks)
         hits_10 = len(isHit10List) / len(ranks)
 
@@ -507,12 +510,14 @@ def main(params):
 
         all_mrr.append(mrr)
         all_hit1.append(hits_1)
+        all_hit3.append(hits_3)
         all_hit5.append(hits_5)
         all_hit10.append(hits_10)
 
         # print(f'MRR | Hits@1 | Hits@5 | Hits@10 : {mrr} | {hits_1} | {hits_5} | {hits_10}')
         print(f'MRR: {mrr: .4f}')
         print(f'Hits@1  : {hits_1: .4f}')
+        print(f'Hits@3  : {hits_3: .4f}')
         print(f'Hits@5  : {hits_5: .4f}')
         print(f'Hits@10 : {hits_10: .4f}')
 
