@@ -5,7 +5,7 @@
 #SBATCH --nodes=1
 #SBATCH --cpus-per-task=18
 #SBATCH --job-name=RMPILinkPredTrain
-#SBATCH --time=00:00:10
+#SBATCH --time=06:00:00
 #SBATCH --mem=60G
 #SBATCH --output=rmpilinktrain.out
 
