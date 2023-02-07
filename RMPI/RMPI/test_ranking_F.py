@@ -585,8 +585,8 @@ if __name__ == '__main__':
         'links': os.path.join('../data', params.dataset, params.test_file+'.txt')
     }
     
-    print(os.path.dirname(os.path.realpath(__file__)))
-    params.model_path = os.path.join('expri_save_models', params.expri_name, 'best_graph_classifier.pth')
+    base_path = os.path.dirname(os.path.realpath(__file__))
+    params.model_path = os.path.join(base_path, 'expri_save_models', params.expri_name, 'best_graph_classifier.pth')
 
 
     print('============ Params ============')

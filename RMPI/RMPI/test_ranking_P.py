@@ -553,10 +553,10 @@ if __name__ == '__main__':
         'graph': os.path.join('../data', params.dataset, 'train.txt'),
         'links': os.path.join('../data', params.dataset, 'test.txt')
     }
-
-    params.model_path = os.path.join('expri_save_models', params.expri_name, 'best_graph_classifier.pth')
-
-
+    
+    base_path = os.path.dirname(os.path.realpath(__file__))
+    params.model_path = os.path.join(base_path, 'expri_save_models', params.expri_name, 'best_graph_classifier.pth')
+    
     print('============ Params ============')
     print('\n'.join('%s: %s' % (k, str(v)) for k, v
                           in sorted(dict(vars(params)).items())))
