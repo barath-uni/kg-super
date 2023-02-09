@@ -18,7 +18,6 @@ cd $HOME/kg-super-engine/kg-super-engine/RMPI
 eval "$(conda shell.bash hook)"
 conda activate kg-rmpi2
 
-mkdir /home/barath/kg-super-engine/kg-bert-sentence/RMPI/data/nell_radial_centroid_0
 # Copy the files to a local folder that can be used later
 cp -r /home/barath/kg-super-engine/kg-super-engine/RMPI/data/nell_v3/* /home/barath/kg-super-engine/kg-bert-sentence/RMPI/data/nell_radial_centroid_0/
 
@@ -28,8 +27,8 @@ echo "TRIGGERING THE TRAINING FOR RADIAL CLUSTER CENTROID 0 \n"
 
 python RMPI/train.py -d nell_radial_centroid_0 -e nell_v2_RMPI_base --ablation 0
 
-python RMPI/test_ranking_F.py -d nell_v2_ind_v3_semi -e nell_v2_RMPI_base --ablation 0
+python RMPI/test_ranking_F.py -d nell_radial_centroid_0 -e nell_v2_RMPI_base --ablation 0
 
 echo "***** STARTING TEST RANKING Partial ************** "
 
-python RMPI/test_ranking_P.py -d nell_v2_ind -e nell_v2_RMPI_base --ablation 0
+python RMPI/test_ranking_P.py -d nell_radial_centroid_0 -e nell_v2_RMPI_base --ablation 0
