@@ -102,7 +102,8 @@ class CustomBertModel(nn.Module, ABC):
             logits = torch.cat([logits, pre_batch_logits], dim=-1)
 
         if self.args.use_self_negative and self.training:
-            head_vector = output_dict['head_vector']
+            # :TODO Replace with 'head_vector', we are only interested in creating a negative mask at this point so instead of head, create one with relation
+            head_vector = output_dict['tail_vector']
             self_neg_logits = torch.sum(hr_vector * head_vector, dim=1) * self.log_inv_t.exp()
             self_negative_mask = batch_dict['self_negative_mask']
             self_neg_logits.masked_fill_(~self_negative_mask, -1e4)

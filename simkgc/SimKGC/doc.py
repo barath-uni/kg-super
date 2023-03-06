@@ -61,7 +61,14 @@ class Example:
     def __init__(self, head_id, relation, tail_id, **kwargs):
         self.head_id = head_id
         self.tail_id = tail_id
-        self.relation = relation
+        # We will replace the relation as Tail and Tail as relation so we can experiment with the simkgc rel prediction
+        self.rel_id = relation
+
+    @property
+    def relation(self):
+        tail_word = _parse_entity_name(self.tail)
+        tail_desc = entity_dict.get_entity_by_id(self.tail_id).entity_desc
+        return _concat_name_desc(tail_word, tail_desc)
 
     @property
     def head_desc(self):
@@ -71,7 +78,7 @@ class Example:
 
     @property
     def tail_desc(self):
-        return entity_dict.get_entity_by_id(self.tail_id).entity_desc
+        return self.rel_id
 
     @property
     def head(self):
@@ -81,15 +88,28 @@ class Example:
 
     @property
     def tail(self):
-        return entity_dict.get_entity_by_id(self.tail_id).entity
+        return self.rel_id
 
     def vectorize(self) -> dict:
         head_desc, tail_desc = self.head_desc, self.tail_desc
+        # Possibly perform the 'Q+A Template application'
         if args.use_link_graph:
             if len(head_desc.split()) < 20:
                 head_desc += ' ' + get_neighbor_desc(head_id=self.head_id, tail_id=self.tail_id)
             if len(tail_desc.split()) < 20:
-                tail_desc += ' ' + get_neighbor_desc(head_id=self.tail_id, tail_id=self.head_id)
+                print("LENGTH OF TAIL DESCRIPTION IS ")
+                print(len(tail_desc.split()))
+                # tail_desc += ' ' + get_neighbor_desc(head_id=self.tail_id, tail_id=self.head_id)
+
+        # For encoding HR
+        # Headword+Head_description, Relation tokenized
+
+        # We will replace the Headword+Head_description, Tailword+Tail_description
+
+        # For encoding Tail
+        # We will return Relation
+
+        # For encoding head, we will let it as it is, because we aren't interested in the inv_t for now
 
         head_word = _parse_entity_name(self.head)
         head_text = _concat_name_desc(head_word, head_desc)
