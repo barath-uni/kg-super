@@ -18,4 +18,4 @@ cd $HOME/kg-super-engine/kg-super-engine/simkgc/SimKGC
 eval "$(conda shell.bash hook)"
 conda activate kg-rmpi2
 
-python3 -u main.py --model-dir "$HOME/kg-super-engine/kg-super-engine/simkgc/SimKGC/train" --pretrained-model bert-base-uncased --pooling mean --lr 1e-5 --use-link-graph --train-path "$HOME/kg-super-engine/kg-super-engine/simkgc/SimKGC/data/train.txt.json" --valid-path "$HOME/kg-super-engine/kg-super-engine/simkgc/SimKGC/data/valid.txt.json" --task FB15k237 --batch-size 1024 --print-freq 20 --additive-margin 0.02 --use-amp --use-self-negative --finetune-t --pre-batch 2 --epochs 10 --workers 4 --max-to-keep 5
+python3 -u main.py --model-dir "$HOME/kg-super-engine/kg-super-engine/simkgc/SimKGC/train" --pretrained-model bert-base-uncased --pooling mean --lr 1e-5 --use-link-graph --train-path "$HOME/kg-super-engine/kg-super-engine/simkgc/SimKGC/data/FB15k237/train.txt.json" --valid-path "$HOME/kg-super-engine/kg-super-engine/simkgc/SimKGC/FB15k237/data/valid.txt.json" --task FB15k237 --batch-size 1024 --print-freq 20 --additive-margin 0.02 --use-amp --use-self-negative --finetune-t --pre-batch 2 --epochs 10 --workers 4 --max-to-keep 5
