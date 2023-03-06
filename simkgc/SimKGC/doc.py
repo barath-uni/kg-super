@@ -96,10 +96,11 @@ class Example:
         if args.use_link_graph:
             if len(head_desc.split()) < 20:
                 head_desc += ' ' + get_neighbor_desc(head_id=self.head_id, tail_id=self.tail_id)
-            if len(tail_desc.split()) < 20:
-                print("LENGTH OF TAIL DESCRIPTION IS ")
-                print(len(tail_desc.split()))
-                # tail_desc += ' ' + get_neighbor_desc(head_id=self.tail_id, tail_id=self.head_id)
+            # if len(tail_desc.split()) < 20:
+            #     print(".")
+            #     # print("LENGTH OF TAIL DESCRIPTION IS ")
+            #     # print(len(tail_desc.split()))
+            #     # tail_desc += ' ' + get_neighbor_desc(head_id=self.tail_id, tail_id=self.head_id)
 
         # For encoding HR
         # Headword+Head_description, Relation tokenized
