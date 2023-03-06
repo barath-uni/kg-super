@@ -5,7 +5,7 @@
 #SBATCH --nodes=1
 #SBATCH --cpus-per-task=18
 #SBATCH --job-name=SIMKGCNormalTrain
-#SBATCH --time=12:00:00
+#SBATCH --time=00:15:00
 #SBATCH --mem=60G
 #SBATCH --output=simkgcnormaltrain.out
 

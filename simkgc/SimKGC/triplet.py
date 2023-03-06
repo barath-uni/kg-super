@@ -47,7 +47,10 @@ class EntityDict:
 
     def __init__(self, entity_dict_dir: str, inductive_test_path: str = None):
         path = os.path.join(entity_dict_dir, 'entities.json')
-        assert os.path.exists(path)
+        print(path)
+        if not os.path.exists(path):
+            path = "/home/barath/kg-super-engine/kg-super-engine/simkgc/SimKGC/data/FB15k237/entities.json"
+        
         self.entity_exs = [EntityExample(**obj) for obj in json.load(open(path, 'r', encoding='utf-8'))]
 
         if inductive_test_path:
