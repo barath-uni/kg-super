@@ -123,7 +123,7 @@ class CustomBertModel(nn.Module, ABC):
         pre_batch_logits = hr_vector.mm(self.pre_batch_vectors.clone().t())
         pre_batch_logits *= self.log_inv_t.exp() * self.args.pre_batch_weight
         if self.pre_batch_exs[-1] is not None:
-            pre_triplet_mask = constroutput_dictuct_mask(batch_exs, self.pre_batch_exs).to(hr_vector.device)
+            pre_triplet_mask = construct_mask(batch_exs, self.pre_batch_exs).to(hr_vector.device)
             pre_batch_logits.masked_fill_(~pre_triplet_mask, -1e4)
 
         self.pre_batch_vectors[self.offset:(self.offset + self.batch_size)] = tail_vector.data.clone()
