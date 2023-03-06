@@ -1,8 +1,13 @@
+#!/bin/bash
+
+#SBATCH --partition=gpu
+#SBATCH --gpus-per-node=1
+#SBATCH --nodes=1
 #SBATCH --cpus-per-task=18
-#SBATCH --job-name=SIMKGCPreprocess
-#SBATCH --time=01:00:00
+#SBATCH --job-name=SIMKGCNormalTrain
+#SBATCH --time=12:00:00
 #SBATCH --mem=60G
-#SBATCH --output=simkgcpreprocess.out
+#SBATCH --output=simkgcnormaltrain.out
 
 module purge
 module load 2021
