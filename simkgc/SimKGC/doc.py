@@ -177,6 +177,10 @@ def load_data(path: str,
             examples.append(Example(**reverse_triplet(obj)))
         data[i] = None
 
+    print("EXAMPLES")
+    print(examples)
+    import sys
+    sys.exit(1)
     return examples
 
 
