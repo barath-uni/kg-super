@@ -121,9 +121,6 @@ class Example:
 
         tail_word = _parse_entity_name(self.tail)
         tail_encoded_inputs = _custom_tokenize(text=_concat_name_desc(tail_word, tail_desc))
-        print("HEAD TAIL RELATION")
-        print(head_text)
-        print(_concat_name_desc(tail_word, tail_desc))
         return {'hr_token_ids': hr_encoded_inputs['input_ids'],
                 'hr_token_type_ids': hr_encoded_inputs['token_type_ids'],
                 'tail_token_ids': tail_encoded_inputs['input_ids'],
@@ -175,16 +172,9 @@ def load_data(path: str,
         obj = data[i]
         if add_forward_triplet:
             examples.append(Example(**obj))
-            print("PRINTING THE EXAMPLES")
-            print(examples[i].vectorize())
         if add_backward_triplet:
             examples.append(Example(**reverse_triplet(obj)))
         data[i] = None
-
-    print("EXAMPLES")
-    print(examples)
-    import sys
-    sys.exit(1)
     return examples
 
 
