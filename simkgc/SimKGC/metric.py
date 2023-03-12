@@ -12,7 +12,8 @@ def accuracy(output: torch.tensor, target: torch.tensor, topk=(1,)) -> List[torc
         _, pred = output.topk(maxk, 1, True, True)
         pred = pred.t()
         correct = pred.eq(target.view(1, -1).expand_as(pred))
-
+        print("CORRECT PREDICTION")
+        print(correct)
         res = []
         for k in topk:
             correct_k = correct[:k].contiguous().view(-1).float().sum(0, keepdim=True)
