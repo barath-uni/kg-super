@@ -19,4 +19,4 @@ eval "$(conda shell.bash hook)"
 conda activate kg-rmpi2
 
 # Not adding a negative sampling until I figure out what it does
-python3 -u evaluate.py --task FB15K237  --is-test  --eval-model-path "$HOME/kg-super-engine/kg-super-engine/simkgc/SimKGC/relation"  --neighbor-weight 0.05  --rerank-n-hop 2 --train-path "$HOME/kg-super-engine/kg-super-engine/simkgc/SimKGC/data/FB15k237/train.txt.json" --valid-path "$HOME/kg-super-engine/kg-super-engine/simkgc/SimKGC/data/FB15k237/valid.txt.json"
+python3 -u evaluate.py --task FB15K237  --is-test  --eval-model-path "$HOME/kg-super-engine/kg-super-engine/simkgc/SimKGC/relationship"  --neighbor-weight 0.05  --rerank-n-hop 2 --train-path "$HOME/kg-super-engine/kg-super-engine/simkgc/SimKGC/data/FB15k237/train.txt.json" --valid-path "$HOME/kg-super-engine/kg-super-engine/simkgc/SimKGC/data/FB15k237/valid.txt.json"
