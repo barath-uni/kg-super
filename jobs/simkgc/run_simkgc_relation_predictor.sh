@@ -5,8 +5,8 @@
 #SBATCH --nodes=1
 #SBATCH --cpus-per-task=18
 #SBATCH --job-name=SIMKGCReltrain
-#SBATCH --time=12:00:00
-#SBATCH --mem=120G
+#SBATCH --time=03:00:00
+#SBATCH --mem=80G
 #SBATCH --output=simkgcrelationswap.out
 
 module purge
