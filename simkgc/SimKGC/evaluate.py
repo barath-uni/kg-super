@@ -139,7 +139,7 @@ def eval_single_direction(predictor: BertPredictor,
 
     hr_tensor, _ = predictor.predict_by_examples(examples)
     hr_tensor = hr_tensor.to(entity_tensor.device)
-    # As per the new change in the architecure, we are interested in evaluating against the relationship, so change here
+    # As per the new change in the architecure, we are interested in evaluating against the relationship, so change
     target = [ex.relation for ex in examples]
     logger.info('predict tensor done, compute metrics...')
 

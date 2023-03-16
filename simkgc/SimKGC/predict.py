@@ -73,6 +73,8 @@ class BertPredictor:
                 batch_dict = move_to_cuda(batch_dict)
             outputs = self.model(**batch_dict)
             hr_tensor_list.append(outputs['hr_vector'])
+            print("OUTPUTS")
+            print(outputs)
             tail_tensor_list.append(outputs['tail_vector'])
 
         return torch.cat(hr_tensor_list, dim=0), torch.cat(tail_tensor_list, dim=0)
