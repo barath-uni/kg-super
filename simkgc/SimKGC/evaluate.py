@@ -139,7 +139,8 @@ def eval_single_direction(predictor: BertPredictor,
 
     hr_tensor, _ = predictor.predict_by_examples(examples)
     hr_tensor = hr_tensor.to(entity_tensor.device)
-    target = [entity_dict.entity_to_idx(ex.tail_id) for ex in examples]
+    # As per the new change in the architecure, we are interested in evaluating against the relationship, so change here
+    target = [ex.relation for ex in examples]
     logger.info('predict tensor done, compute metrics...')
 
     topk_scores, topk_indices, metrics, ranks = compute_metrics(hr_tensor=hr_tensor, entities_tensor=entity_tensor,

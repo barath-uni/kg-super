@@ -5,7 +5,7 @@
 #SBATCH --nodes=1
 #SBATCH --cpus-per-task=18
 #SBATCH --job-name=SIMKGCRelEval
-#SBATCH --time=02:00:00
+#SBATCH --time=00:20:00
 #SBATCH --mem=100G
 #SBATCH --output=simkgcrelationshipeval.out
 
