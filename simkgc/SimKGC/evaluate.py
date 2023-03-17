@@ -47,7 +47,7 @@ def compute_metrics(hr_tensor: torch.tensor,
                     k=3, batch_size=256) -> Tuple:
     assert hr_tensor.size(1) == entities_tensor.size(1)
     total = hr_tensor.size(0)
-    entity_cnt = len(entity_dict)
+    entity_cnt = len(entity_dict.relationship_exs)
     assert entity_cnt == entities_tensor.size(0)
     target = torch.LongTensor(target).unsqueeze(-1).to(hr_tensor.device)
     topk_scores, topk_indices = [], []
