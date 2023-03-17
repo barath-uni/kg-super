@@ -60,7 +60,7 @@ class EntityDict:
         self.entity_exs = [EntityExample(**obj) for obj in json.load(open(path, 'r', encoding='utf-8'))]
 
         relationship_obj = json.load(open(rel_path, 'r', encoding='utf-8'))
-        self.relationship_exs = [RelationshipExample(rel_id=key, relationship=value) for key, value in relationship_obj.items]
+        self.relationship_exs = [RelationshipExample(rel_id=key, relationship=value) for key, value in relationship_obj.items()]
 
         if inductive_test_path:
             examples = json.load(open(inductive_test_path, 'r', encoding='utf-8'))

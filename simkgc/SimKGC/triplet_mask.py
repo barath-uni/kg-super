@@ -45,7 +45,7 @@ def construct_mask(row_exs: List, col_exs: List = None) -> torch.tensor:
 def construct_self_negative_mask(exs: List) -> torch.tensor:
     mask = torch.ones(len(exs))
     for idx, ex in enumerate(exs):
-        head_id, relation = ex.head_id, ex.relation
+        head_id, relation = ex.head_id, ex.rel_id
         neighbor_ids = train_triplet_dict.get_neighbors(head_id, relation)
         if head_id in neighbor_ids:
             mask[idx] = 0
