@@ -66,20 +66,21 @@ def compute_metrics(hr_tensor: torch.tensor,
         rerank_by_graph(batch_score, examples[start:end], entity_dict=entity_dict)
 
         # filter known triplets
-        for idx in range(batch_score.size(0)):
-            mask_indices = []
-            cur_ex = examples[start + idx]
-            gold_neighbor_ids = all_triplet_dict.get_neighbors(cur_ex.head_id, cur_ex.rel_id)
-            if len(gold_neighbor_ids) > 10000:
-                logger.debug('{} - {} has {} neighbors'.format(cur_ex.head_id, cur_ex.rel_id, len(gold_neighbor_ids)))
-            for e_id in gold_neighbor_ids:
-                if e_id == cur_ex.tailidnew:
-                    continue
-                mask_indices.append(entity_dict.entity_to_idx(e_id))
-            mask_indices = torch.LongTensor(mask_indices).to(batch_score.device)
+        # for idx in range(batch_score.size(0)):
+        #     mask_indices = []
+        #     cur_ex = examples[start + idx]
+        #     gold_neighbor_ids = all_triplet_dict.get_neighbors(cur_ex.head_id, cur_ex.rel_id)
+        #     if len(gold_neighbor_ids) > 10000:
+        #         logger.debug('{} - {} has {} neighbors'.format(cur_ex.head_id, cur_ex.rel_id, len(gold_neighbor_ids)))
+        #     for e_id in gold_neighbor_ids:
+        #         if e_id == cur_ex.tailidnew:
+        #             continue
+        #         mask_indices.append(entity_dict.entity_to_idx(e_id))
+        #     mask_indices = torch.LongTensor(mask_indices).to(batch_score.device)
 
-            print(f"MASK INDICES length = {len(mask_indices)}")
-            batch_score[idx].index_fill_(0, mask_indices, -1)
+        #     print(f"MASK INDICES length = {len(mask_indices)}")
+        #     batch_score[idx].index_fill_(0, mask_indices, -1)
+        
         print(f"Batch Score length = {len(batch_score)}")
         batch_sorted_score, batch_sorted_indices = torch.sort(batch_score, dim=-1, descending=True)
 
