@@ -77,9 +77,14 @@ def compute_metrics(hr_tensor: torch.tensor,
                     continue
                 mask_indices.append(entity_dict.entity_to_idx(e_id))
             mask_indices = torch.LongTensor(mask_indices).to(batch_score.device)
-            batch_score[idx].index_fill_(0, mask_indices, -1)
 
+            print(f"MASK INDICES length = {len(mask_indices)}")
+            batch_score[idx].index_fill_(0, mask_indices, -1)
+        print(f"Batch Score length = {len(batch_score)}")
         batch_sorted_score, batch_sorted_indices = torch.sort(batch_score, dim=-1, descending=True)
+
+        print(f"BATCH INDICES {batch_sorted_indices}")
+        print(f"TARGET INDICES {batch_target}")
         target_rank = torch.nonzero(batch_sorted_indices.eq(batch_target).long(), as_tuple=False)
         assert target_rank.size(0) == batch_score.size(0)
         for idx in range(batch_score.size(0)):
