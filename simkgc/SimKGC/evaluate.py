@@ -81,7 +81,7 @@ def compute_metrics(hr_tensor: torch.tensor,
         #     print(f"MASK INDICES length = {len(mask_indices)}")
         #     batch_score[idx].index_fill_(0, mask_indices, -1)
         print(f"Relationship Length = {entity_cnt}")
-        print(f"Batch Score length = {len(batch_score.size(1))}")
+        print(f"Batch Score length = {batch_score.size(1)}")
         batch_sorted_score, batch_sorted_indices = torch.sort(batch_score, dim=-1, descending=True)
 
         print(f"BATCH INDICES {batch_sorted_indices}")
