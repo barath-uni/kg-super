@@ -80,6 +80,28 @@ class BertPredictor:
         return torch.cat(hr_tensor_list, dim=0), torch.cat(tail_tensor_list, dim=0)
 
     @torch.no_grad()
+    def predict_by_relations(self, relations_exs) -> torch.tensor:
+        examples = []
+        for relation_ex in relations_exs:
+            examples.append(Example(head_id='', relation=relation_ex.relationship, tail_id=''))
+        data_loader = torch.utils.data.DataLoader(
+            Dataset(path='', examples=examples, task=args.task),
+            num_workers=2,
+            batch_size=max(args.batch_size, 1024),
+            collate_fn=collate,
+            shuffle=False)
+
+        ent_tensor_list = []
+        for idx, batch_dict in enumerate(tqdm.tqdm(data_loader)):
+            batch_dict['only_ent_embedding'] = True
+            if self.use_cuda:
+                batch_dict = move_to_cuda(batch_dict)
+            outputs = self.model(**batch_dict)
+            ent_tensor_list.append(outputs['ent_vectors'])
+        # Note by the time this finishes encoding, the ent_vectors actually represent the 'relationship' vectors because of how we have exchanged the Rel, and Tail
+        return torch.cat(ent_tensor_list, dim=0)
+
+    @torch.no_grad()
     def predict_by_entities(self, entity_exs) -> torch.tensor:
         examples = []
         for entity_ex in entity_exs:

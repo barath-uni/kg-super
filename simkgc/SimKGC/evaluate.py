@@ -69,11 +69,11 @@ def compute_metrics(hr_tensor: torch.tensor,
         for idx in range(batch_score.size(0)):
             mask_indices = []
             cur_ex = examples[start + idx]
-            gold_neighbor_ids = all_triplet_dict.get_neighbors(cur_ex.head_id, cur_ex.relation)
+            gold_neighbor_ids = all_triplet_dict.get_neighbors(cur_ex.head_id, cur_ex.rel_id)
             if len(gold_neighbor_ids) > 10000:
-                logger.debug('{} - {} has {} neighbors'.format(cur_ex.head_id, cur_ex.relation, len(gold_neighbor_ids)))
+                logger.debug('{} - {} has {} neighbors'.format(cur_ex.head_id, cur_ex.rel_id, len(gold_neighbor_ids)))
             for e_id in gold_neighbor_ids:
-                if e_id == cur_ex.tail_id:
+                if e_id == cur_ex.tailidnew:
                     continue
                 mask_indices.append(entity_dict.entity_to_idx(e_id))
             mask_indices = torch.LongTensor(mask_indices).to(batch_score.device)
@@ -111,13 +111,16 @@ def predict_by_split():
 
     predictor = BertPredictor()
     predictor.load(ckt_path=args.eval_model_path)
+    # This is pointing at a relationship as expected
     entity_tensor = predictor.predict_by_entities(entity_dict.entity_exs)
 
+    relationship_tensor = predictor.predict_by_relations(entity_dict.relationship_exs)
+
     forward_metrics = eval_single_direction(predictor,
-                                            entity_tensor=entity_tensor,
+                                            relation_tensor=relationship_tensor,
                                             eval_forward=True)
     backward_metrics = eval_single_direction(predictor,
-                                             entity_tensor=entity_tensor,
+                                             relation_tensor=relationship_tensor,
                                              eval_forward=False)
     metrics = {k: round((forward_metrics[k] + backward_metrics[k]) / 2, 4) for k in forward_metrics}
     logger.info('Averaged metrics: {}'.format(metrics))
@@ -131,19 +134,22 @@ def predict_by_split():
 
 
 def eval_single_direction(predictor: BertPredictor,
-                          entity_tensor: torch.tensor,
+                          relation_tensor: torch.tensor,
                           eval_forward=True,
                           batch_size=256) -> dict:
     start_time = time()
     examples = load_data(args.valid_path, add_forward_triplet=eval_forward, add_backward_triplet=not eval_forward)
 
+    # HR represents the Head-Tail and _ is the relationship vector left empty here
+
     hr_tensor, _ = predictor.predict_by_examples(examples)
-    hr_tensor = hr_tensor.to(entity_tensor.device)
+    # This is the Head-Tail tensor here
+    hr_tensor = hr_tensor.to(relation_tensor.device)
     # As per the new change in the architecure, we are interested in evaluating against the relationship, so change
-    target = [ex.relation for ex in examples]
+    target = [entity_dict.relation2idx(ex.rel_id) for ex in examples]
     logger.info('predict tensor done, compute metrics...')
 
-    topk_scores, topk_indices, metrics, ranks = compute_metrics(hr_tensor=hr_tensor, entities_tensor=entity_tensor,
+    topk_scores, topk_indices, metrics, ranks = compute_metrics(hr_tensor=hr_tensor, entities_tensor=relation_tensor,
                                                                 target=target, examples=examples,
                                                                 batch_size=batch_size)
     eval_dir = 'forward' if eval_forward else 'backward'

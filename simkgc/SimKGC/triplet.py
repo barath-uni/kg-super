@@ -14,6 +14,10 @@ class EntityExample:
     entity: str
     entity_desc: str = ''
 
+@dataclass
+class RelationshipExample:
+    rel_id: str
+    relationship: str
 
 class TripletDict:
 
@@ -47,11 +51,16 @@ class EntityDict:
 
     def __init__(self, entity_dict_dir: str, inductive_test_path: str = None):
         path = os.path.join(entity_dict_dir, 'entities.json')
-        print(path)
+        
         if not os.path.exists(path):
             path = "/home/barath/kg-super-engine/kg-super-engine/simkgc/SimKGC/data/FB15k237/entities.json"
         
+        rel_path = "/home/barath/kg-super-engine/kg-super-engine/simkgc/SimKGC/data/FB15k237/relations.json"
+
         self.entity_exs = [EntityExample(**obj) for obj in json.load(open(path, 'r', encoding='utf-8'))]
+
+        relationship_obj = json.load(open(rel_path, 'r', encoding='utf-8'))
+        self.relationship_exs = [RelationshipExample(rel_id=key, relationship=value) for key, value in relationship_obj.items]
 
         if inductive_test_path:
             examples = json.load(open(inductive_test_path, 'r', encoding='utf-8'))
@@ -63,6 +72,9 @@ class EntityDict:
 
         self.id2entity = {ex.entity_id: ex for ex in self.entity_exs}
         self.entity2idx = {ex.entity_id: i for i, ex in enumerate(self.entity_exs)}
+
+        self.id2relation = {ex.rel_id:ex for ex in self.relationship_exs}
+        self.relation2idx = {ex.relationship:i for i, ex in enumerate(self.relationship_exs)}
         logger.info('Load {} entities from {}'.format(len(self.id2entity), path))
 
     def entity_to_idx(self, entity_id: str) -> int:
@@ -73,6 +85,12 @@ class EntityDict:
 
     def get_entity_by_idx(self, idx: int) -> EntityExample:
         return self.entity_exs[idx]
+
+    def relationship_to_idx(self, relationship:str) -> RelationshipExample:
+        return self.relation2idx[relationship]
+
+    def idx_to_relation(self, idx:int) -> RelationshipExample:
+        return self.relationship_exs[idx]
 
     def __len__(self):
         return len(self.entity_exs)

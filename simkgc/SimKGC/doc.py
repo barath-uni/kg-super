@@ -60,14 +60,14 @@ class Example:
 
     def __init__(self, head_id, relation, tail_id, **kwargs):
         self.head_id = head_id
-        self.tail_id = tail_id
+        self.tailidnew = tail_id
         # We will replace the relation as Tail and Tail as relation so we can experiment with the simkgc rel prediction
         self.rel_id = relation
 
     @property
     def relation(self):
         tail_word = _parse_entity_name(self.tail)
-        tail_desc = entity_dict.get_entity_by_id(self.tail_id).entity_desc
+        tail_desc = entity_dict.get_entity_by_id(self.tailidnew).entity_desc
         return _concat_name_desc(tail_word, tail_desc)
 
     @property
@@ -75,6 +75,13 @@ class Example:
         if not self.head_id:
             return ''
         return entity_dict.get_entity_by_id(self.head_id).entity_desc
+    
+    # @property
+    # def tail_id(self):
+    #     # We want to return an 'ID' that basically returns the id of the relation so that we can 'exchange' tail and relation
+    #     relation = self.rel_id
+    #     return entity_dict.re
+
 
     @property
     def tail_desc(self):
@@ -95,7 +102,7 @@ class Example:
         # Possibly perform the 'Q+A Template application'
         if args.use_link_graph:
             if len(head_desc.split()) < 20:
-                head_desc += ' ' + get_neighbor_desc(head_id=self.head_id, tail_id=self.tail_id)
+                head_desc += ' ' + get_neighbor_desc(head_id=self.head_id, tail_id=self.tailidnew)
             # if len(tail_desc.split()) < 20:
             #     print(".")
             #     # print("LENGTH OF TAIL DESCRIPTION IS ")

@@ -64,11 +64,11 @@ def predict_by_split():
 
     entity_tensor = _load_entity_embeddings().cuda()
     forward_metrics = eval_single_direction(predictor,
-                                            entity_tensor=entity_tensor,
+                                            relation_tensor=entity_tensor,
                                             eval_forward=True,
                                             batch_size=32)
     backward_metrics = eval_single_direction(predictor,
-                                             entity_tensor=entity_tensor,
+                                             relation_tensor=entity_tensor,
                                              eval_forward=False,
                                              batch_size=32)
     metrics = {k: round((forward_metrics[k] + backward_metrics[k]) / 2, 4) for k in forward_metrics}
