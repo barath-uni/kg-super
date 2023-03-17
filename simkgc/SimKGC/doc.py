@@ -66,7 +66,10 @@ class Example:
 
     @property
     def relation(self):
-        tail_word = _parse_entity_name(self.tail)
+        if not self.tailidnew:
+            return ''
+        tail = entity_dict.get_entity_by_id(self.tailidnew).entity
+        tail_word = _parse_entity_name(tail)
         tail_desc = entity_dict.get_entity_by_id(self.tailidnew).entity_desc
         return _concat_name_desc(tail_word, tail_desc)
 
