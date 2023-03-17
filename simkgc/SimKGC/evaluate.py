@@ -146,7 +146,7 @@ def eval_single_direction(predictor: BertPredictor,
     # This is the Head-Tail tensor here
     hr_tensor = hr_tensor.to(relation_tensor.device)
     # As per the new change in the architecure, we are interested in evaluating against the relationship, so change
-    target = [entity_dict.relation2idx(ex.rel_id) for ex in examples]
+    target = [entity_dict.relationship_to_idx(ex.rel_id) for ex in examples]
     logger.info('predict tensor done, compute metrics...')
 
     topk_scores, topk_indices, metrics, ranks = compute_metrics(hr_tensor=hr_tensor, entities_tensor=relation_tensor,
