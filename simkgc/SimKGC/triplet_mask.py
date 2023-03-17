@@ -16,9 +16,9 @@ def construct_mask(row_exs: List, col_exs: List = None) -> torch.tensor:
     num_col = len(col_exs)
 
     # exact match
-    row_entity_ids = torch.LongTensor([entity_dict.entity_to_idx(ex.tail_id) for ex in row_exs])
+    row_entity_ids = torch.LongTensor([entity_dict.entity_to_idx(ex.tailidnew) for ex in row_exs])
     col_entity_ids = row_entity_ids if positive_on_diagonal else \
-        torch.LongTensor([entity_dict.entity_to_idx(ex.tail_id) for ex in col_exs])
+        torch.LongTensor([entity_dict.entity_to_idx(ex.tailidnew) for ex in col_exs])
     # num_row x num_col
     triplet_mask = (row_entity_ids.unsqueeze(1) != col_entity_ids.unsqueeze(0))
     if positive_on_diagonal:
