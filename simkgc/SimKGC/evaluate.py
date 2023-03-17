@@ -63,7 +63,7 @@ def compute_metrics(hr_tensor: torch.tensor,
         batch_target = target[start:end]
 
         # re-ranking based on topological structure
-        rerank_by_graph(batch_score, examples[start:end], entity_dict=entity_dict)
+        # rerank_by_graph(batch_score, examples[start:end], entity_dict=entity_dict)
 
         # filter known triplets
         # for idx in range(batch_score.size(0)):
@@ -80,8 +80,8 @@ def compute_metrics(hr_tensor: torch.tensor,
 
         #     print(f"MASK INDICES length = {len(mask_indices)}")
         #     batch_score[idx].index_fill_(0, mask_indices, -1)
-        
-        print(f"Batch Score length = {len(batch_score)}")
+        print(f"Relationship Length = {entity_cnt}")
+        print(f"Batch Score length = {len(batch_score.size(1))}")
         batch_sorted_score, batch_sorted_indices = torch.sort(batch_score, dim=-1, descending=True)
 
         print(f"BATCH INDICES {batch_sorted_indices}")
