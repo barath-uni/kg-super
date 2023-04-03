@@ -7,8 +7,8 @@ import math
 from sklearn.cluster import KMeans
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.decomposition import PCA
-
-centroid = "random_centroid_2"
+typ = "fb15k_sentence"
+centroid = "random_centroid_1"
 output_dir = f"/home/barath/codespace/kg-super/kg-super-engine/output/fb15k237/radial_cluster_sentence/{centroid}"
 train_csv = f"{output_dir}/train.csv"
 test_csv = f"{output_dir}/test.csv"
@@ -28,17 +28,16 @@ print(f"Number of Unique Entities(HEAD, TAIL) in Validation = {len(np.unique(df_
 print(f"Number of Unique Relationship in Train = {len(np.unique(df_dev[['relationship']].values))}")
 print("----------------------------")
 
+# print("------------------UNIQUE RELATIONS-----------------")
+# print(f"---------{centroid}")
+# print("TRAIN-----------")
+# print(df['relationship'].unique())
 
-print("------------------UNIQUE RELATIONS-----------------")
-print(f"---------{centroid}")
-print("TRAIN-----------")
-print(df['relationship'].unique())
+# print("DEV-----------")
+# print(df_dev['relationship'].unique())
 
-print("DEV-----------")
-print(df_dev['relationship'].unique())
-
-print("TEST-----------")
-print(df_test['relationship'].unique())
+# print("TEST-----------")
+# print(df_test['relationship'].unique())
 
 # df.to_csv(f'{output_dir}/train.tsv', sep='\t', encoding='utf-8', index=False, header=None)
 # df_test.to_csv(f'{output_dir}/test.tsv', sep='\t', encoding='utf-8', index=False, header=None)
@@ -121,11 +120,29 @@ ax.scatter(degree_dev, no_dev, alpha=0.6, c='g', marker="d", label='Dev')
 ax.scatter(degree_test, no_test, alpha=0.6, c='r', marker="*", label='Test')
 ax.set_xlabel(r'Log of Degree', fontsize=15)
 ax.set_ylabel(r'Log of # entities', fontsize=15)
-ax.set_title('Log Degree vs Number of entities')
+ax.set_title('Log degree vs Log of # entities')
 ax.grid(True)
 plt.legend(loc='upper left')
 fig.tight_layout()
-plt.savefig(f'{centroid}.png', dpi=fig.dpi)
+plt.savefig(f'{typ}_{centroid}.png', dpi=fig.dpi)
 plt.show()
 
-plot_radial_cluster(df, df_test, df_dev)
+# plot_radial_cluster(df, df_test, df_dev)
+
+# Cardinality Stats -> For each relation in the set, get its cardinality (1-N?N-1?N-N)
+# df.relation unique(), then get the set of rows that has this relation, count unique head/tail. Add it to the corresponding bucket -> (1-N, N-1, N-N)
+
+# Bar plot this number for each set, FB15K TF-IDF one color, SBERT one color, darker color Nell
+
+
+# Type of entity, seen-rel-seen, unseen-rel-seen/seen-rel-unseen, unseen-rel-unseen
+# For dev/test only, for dev get unique entities head,tail from train, is head,tail->seen? seen-rel-seen+1, is head unseen, tail seen/tail unseen, head seen, then that bucket
+# For test, unique entity from train+dev repeat above
+# Bar plot this number for each set, FB15K TF-IDF one color, SBERT one color, darker color Nell
+
+# Count of unique ent, unique rel in each set, use the code from above
+
+
+
+
+
