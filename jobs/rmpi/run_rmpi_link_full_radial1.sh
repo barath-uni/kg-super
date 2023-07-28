@@ -13,17 +13,16 @@ module purge
 module load 2021
 module load Anaconda3/2021.05
 
-# /home/barath/blogwriter/AutoBlogWriter
 cd $HOME/kg-super-engine/kg-super-engine/RMPI
 eval "$(conda shell.bash hook)"
 conda activate kg-rmpi2
 
-mkdir -p /home/barath/kg-super-engine/kg-super-engine/RMPI/data/nell_radial_centroid_1/
+mkdir -p $HOME/kg-super-engine/kg-super-engine/RMPI/data/nell_radial_centroid_1/
 
 # Copy the files to a local folder that can be used later
-cp -r /home/barath/kg-super-engine/kg-super-engine/RMPI/data/nell_v3/* /home/barath/kg-super-engine/kg-super-engine/RMPI/data/nell_radial_centroid_1/
+cp -r $HOME/kg-super-engine/kg-super-engine/RMPI/data/nell_v3/* $HOME/kg-super-engine/kg-super-engine/RMPI/data/nell_radial_centroid_1/
 
-cp -r /home/barath/kg-super-engine/kg-super-engine/output/nell995/radial_cluster/random_centroid_1/*.txt /home/barath/kg-super-engine/kg-super-engine/RMPI/data/nell_radial_centroid_1/
+cp -r $HOME/kg-super-engine/kg-super-engine/output/nell995/radial_cluster/random_centroid_1/*.txt $HOME/kg-super-engine/kg-super-engine/RMPI/data/nell_radial_centroid_1/
 
 echo "TRIGGERING THE TRAINING FOR RADIAL CLUSTER CENTROID 1 \n"
 

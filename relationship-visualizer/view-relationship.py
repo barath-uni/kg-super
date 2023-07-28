@@ -351,17 +351,6 @@ def Jaccard_Similarity(words_doc1, words_doc2):
     # using length of intersection set divided by length of union set
     return float(len(intersection)) / len(union)
 
-
-@click.command()
-@click.option('--dataset', required=True)
-@click.option('--features', type=int, default=2, show_default=True)
-@click.option('--seed', type=int, default=2, show_default=True)
-@click.option('--output', type=click.File('w'))
-def main(dataset, features: int, seed: int, output: TextIO):
-    """Generate random literals for the Nations dataset."""
-    for h, r, t in generate_literals(dataset=dataset, features=features, seed=seed):
-        print(h, r, t, sep='\t', file=output)
-
 def get_cardinality_stats(df):
     unique_relations = df['relationship'].unique()
     one_to_n=0

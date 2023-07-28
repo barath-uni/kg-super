@@ -17,12 +17,12 @@ cd $HOME/kg-super-engine/kg-super-engine
 eval "$(conda shell.bash hook)"
 conda activate kg-super
 
-mkdir -p /home/barath/kg-super-engine/kg-super-engine/output/nell995/tfidvectorizer
+mkdir -p $HOME/kg-super-engine/kg-super-engine/output/nell995/tfidvectorizer
 
-mkdir -p /home/barath/kg-super-engine/kg-super-engine/output/nell995/sentence
+mkdir -p $HOME/kg-super-engine/kg-super-engine/output/nell995/sentence
 
 # Build dataset for nell995
 # Cluster with TFID Vectorizer
-python3 relationship-visualizer/data_preprocessing.py --data_path /home/barath/kg-super-engine/kg-super-engine/nell995 --data nell995 --output_dir /home/barath/kg-super-engine/kg-super-engine/output/nell995/tfidvectorizer
+python3 relationship-visualizer/data_preprocessing.py --data_path $HOME/kg-super-engine/kg-super-engine/nell995 --data nell995 --output_dir $HOME/kg-super-engine/kg-super-engine/output/nell995/tfidvectorizer
 # Cluster with Sentence Embedding
-python3 relationship-visualizer/data_preprocessing.py --cluster_type sentenceembedding --data_path /home/barath/kg-super-engine/kg-super-engine/nell995 --data nell995 --output_dir /home/barath/kg-super-engine/kg-super-engine/output/nell995/sentence
+python3 relationship-visualizer/data_preprocessing.py --cluster_type sentenceembedding --data_path $HOME/kg-super-engine/kg-super-engine/nell995 --data nell995 --output_dir $HOME/kg-super-engine/kg-super-engine/output/nell995/sentence

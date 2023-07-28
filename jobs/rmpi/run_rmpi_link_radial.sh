@@ -19,9 +19,9 @@ eval "$(conda shell.bash hook)"
 conda activate kg-rmpi2
 
 # Copy the files to a local folder that can be used later
-cp -r /home/barath/kg-super-engine/kg-super-engine/RMPI/data/nell_v3/* /home/barath/kg-super-engine/kg-super-engine/RMPI/data/nell_radial_centroid_0/
+cp -r $HOME/kg-super-engine/kg-super-engine/RMPI/data/nell_v3/* $HOME/kg-super-engine/kg-super-engine/RMPI/data/nell_radial_centroid_0/
 
-cp -r /home/barath/kg-super-engine/kg-super-engine/output/nell995/radial_cluster/random_centroid_0/*.txt /home/barath/kg-super-engine/kg-super-engine/RMPI/data/nell_radial_centroid_0/
+cp -r $HOME/kg-super-engine/kg-super-engine/output/nell995/radial_cluster/random_centroid_0/*.txt $HOME/kg-super-engine/kg-super-engine/RMPI/data/nell_radial_centroid_0/
 
 echo "TRIGGERING THE TRAINING FOR RADIAL CLUSTER CENTROID 0 \n"
 

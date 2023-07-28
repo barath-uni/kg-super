@@ -20,9 +20,9 @@ conda activate kg-rmpi2
 
 
 # Copy the files to a local folder that can be used later
-cp -r /home/barath/kg-super-engine/kg-super-engine/simpath/main/data/FB15k237/* /home/barath/kg-super-engine/kg-super-engine/simpath/main/data/FB15k237_tfid_radial/
+cp -r $HOME/kg-super-engine/kg-super-engine/simpath/main/data/FB15k237/* $HOME/kg-super-engine/kg-super-engine/simpath/main/data/FB15k237_tfid_radial/
 
-cp -r /home/barath/kg-super-engine/kg-super-engine/output/fb15k237/radial_cluster/random_centroid_1/*.txt /home/barath/kg-super-engine/kg-super-engine/simpath/main/data/FB15k237_tfid_radial/
+cp -r $HOME/kg-super-engine/kg-super-engine/output/fb15k237/radial_cluster/random_centroid_1/*.txt $HOME/kg-super-engine/kg-super-engine/simpath/main/data/FB15k237_tfid_radial/
 
 
 python3 -u preprocess.py \
