@@ -481,8 +481,8 @@ if __name__ == '__main__':
     # df, dataset_entity_id = get_data_frame("", "nell995")
     centroid = "random_centroid_1"
     path = f"/home/barath/codespace/kg-super/kg-super-engine/output/fb15k237/radial_cluster_sentence/{centroid}"
-    # get_entity_type_plot(path)
-    generate_dataset_stats_plot(path)
+    get_entity_type_plot(path)
+    # generate_dataset_stats_plot(path)
     # generate_similarity_matrix_for_nell(df,"cosine", "sbert")
     # generate_relationship_sim_matrix("FB15k237")
     # generate_relationship_sim_matrix("WN18RR", vectori="sbert")

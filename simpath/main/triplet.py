@@ -53,9 +53,9 @@ class EntityDict:
         path = os.path.join(entity_dict_dir, 'entities.json')
         
         if not os.path.exists(path):
-            path = "/home/barath/kg-super-engine/kg-super-engine/simkgc/SimKGC/data/FB15k237/entities.json"
+            path = "/home/barath/kg-super-engine/kg-super-engine/simpath/main/data/FB15k237/entities.json"
         
-        rel_path = "/home/barath/kg-super-engine/kg-super-engine/simkgc/SimKGC/data/FB15k237/relations.json"
+        rel_path = "/home/barath/kg-super-engine/kg-super-engine/simpath/main/data/FB15k237/relations.json"
 
         self.entity_exs = [EntityExample(**obj) for obj in json.load(open(path, 'r', encoding='utf-8'))]
 
