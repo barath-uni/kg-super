@@ -43,7 +43,25 @@ For *FB15K-237*
 
 Replace the data with 'fb15k-237' data folder path and run the same script as above.
 
-This create
+This create 2 folders, `tfidfvectorizer` and `sentence`.
+
+Example folders are commited and present in `kg-super-engine/output/<dataset-name>/<vectorizer>`
+
+To generate tfidfvectorizer and sentence embedding based splits for other datasets, follow the same procedure.
+
+#### Radial Clustering
+
+- The radial clustering runs via the script under `relationship-visualizer/data_preprocessing.py`. Use the `cluster-type=radial_cluster` to obtain a datasplit with the radial cluster. Note the vectorizer for the 'radial-cluster' can be either TFIDF or SentenceBERT. Choose the parameters carefully to obtain the correct splits. Since the naming is not very straight-forward, this will require minimal effort to organize the output in the correct folder 
+
+#### View stats and other information about data
+
+At the moment, we need to manually edit the script in `relationship-visualizer/view-relationship.py` to obtain stats and other graphs for the new datasets.
+
+You can generate
+
+* Graph level information
+* Sim-matrix between relationship of the graph
+* Cardinality related statistics 
 
 ### 3. Experimental setup
 
