@@ -3,6 +3,13 @@ A knowledge graph model that can genaralize to unseen relationships without any 
 
 ### 1. Download the data
 
+We will make use of 2 datasets `Nell995` and `FB15K-237`. 
+
+Move the folder `kg-super-engine/fb15k237` to required location to process it. This has the `train`, `valid`, `test` splits that are needed to run the experiments
+
+To download Nell995, run `python relationship-visualiser/data-preprocessing.py --data Nell995 --output_dir <dir_name>`. This downloads the graph folder for processing
+
+To download other datasets for visualization experiments, 
 Download the required compressed datasets into the `data` folder:
 
 | Download link                                                | Size (compressed) |
@@ -20,104 +27,32 @@ Then use `tar` to extract the files, e.g.
 tar -xzvf WN18RR.tar.gz
 ```
 
-### Idenitifying Relationship Similarity
+### 2. Generate New datasets
 
-Overlap Coefficient - 
+To start generating new datasets, use the following scripts
 
-Jaccard Coeffecient - 
+For *NELL995*
 
-CompNet - https://web.rniapps.net/compnet/ to visualize the graph
+`sbatch jobs/dataset/nell995_dataset.sh`
 
-Similarity with Textual Embeddings
+For *Wikidata5m*
 
-Cosine-Similarity - 
+`sbatch jobs/dataset/wikidata5m.sh`
 
-L2 Distance - 
+For *FB15K-237*
 
-#### FB15k237
+Replace the data with 'fb15k-237' data folder path and run the same script as above.
 
-- Sentence Embedding -> Kmeans (k=3)
-----------------------------
-Number of Triples in Train = 82436
+This create
 
-Number of Unique Entities(HEAD, TAIL) in Train = 7644
+### 3. Experimental setup
 
-Number of Unique Relationship in Train = 55
 
-Number of Triples in Test = 200600
+#### KG-Bert Relation Prediction
 
-Number of Unique Entities(HEAD, TAIL) in Test = 12969
 
-Number of Unique Relationship in Train = 132
+#### RMPI Relation Prediction
 
-Number of Triples in Validation = 27080
 
-Number of Unique Entities(HEAD, TAIL) in Validation = 5961
-
-Number of Unique Relationship in Train = 50
-
-  
-- TFIDVectorizer -> Kmeans(K=3)
-----------------------------
-Number of Triples in Train = 67039
-
-Number of Unique Entities(HEAD, TAIL) in Train = 5873
-
-Number of Unique Relationship in Train = 38
-
-Number of Triples in Test = 42614
-
-Number of Unique Entities(HEAD, TAIL) in Test = 6489
-
-Number of Unique Relationship in Train = 20
-
-Number of Triples in Validation = 200463
-
-Number of Unique Entities(HEAD, TAIL) in Validation = 13970
-
-Number of Unique Relationship in Train = 179
-
-#### Nell995
-
-- TFIDVectorizer -> Kmeans(K=3)
-
-----------------------------
-Number of Triples in Train = 24722
-
-Number of Unique Entities(HEAD, TAIL) in Train = 6600
-
-Number of Unique Relationship in Train = 132
-
-Number of Triples in Test = 3
-
-Number of Unique Entities(HEAD, TAIL) in Test = 5
-
-Number of Unique Relationship in Train = 1
-
-Number of Triples in Validation = 18
-
-Number of Unique Entities(HEAD, TAIL) in Validation = 13
-
-Number of Unique Relationship in Train = 1
-
-- Sentence Embedding -> Kmeans(K=3)
-
-----------------------------
-Number of Triples in Train = 13032
-
-Number of Unique Entities(HEAD, TAIL) in Train = 4962
-
-Number of Unique Relationship in Train = 79
-
-Number of Triples in Test = 8515
-
-Number of Unique Entities(HEAD, TAIL) in Test = 1336
-
-Number of Unique Relationship in Train = 25
-
-Number of Triples in Validation = 3196
-
-Number of Unique Entities(HEAD, TAIL) in Validation = 1196
-
-Number of Unique Relationship in Train = 30
+#### Sim-PATH Relation Prediction
 

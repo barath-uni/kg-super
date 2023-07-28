@@ -358,7 +358,7 @@ def get_arg_parser():
     parser = argparse.ArgumentParser()
     parser.add_argument('--data_path', type = str, default = '/home/barath/codespace/kg-super/kg-super-engine/fb15k237', help = 'path to output directory')
     parser.add_argument('--data', type = str, default='fb15k237', help ='pykeen dataset name for entity and relationship id lookup')
-    parser.add_argument('--output_dir', type = str, default='/home/barath/kg-super-engine/kg-super-engine/output/', help ='Number of processes')
+    parser.add_argument('--output_dir', type = str, default='kg-super-engine/kg-super-engine/output/', help ='Number of processes')
     parser.add_argument('--cluster_type', type = str, default='tfidvectorizer', help ='Vectorizing Algorithm')
     return parser
 
